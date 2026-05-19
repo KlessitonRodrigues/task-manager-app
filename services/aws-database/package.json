@@ -1,0 +1,25 @@
+{
+  "name": "@services/aws-database",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "cdk-synt": "cdk synthesize",
+    "cdk-deploy": "cdk deploy --all"
+  },
+  "devDependencies": {
+    "@trivago/prettier-plugin-sort-imports": "^6.0.2",
+    "@types/node": "25.9.1",
+    "aws-cdk": "^2.1110.0",
+    "ts-node": "^10.9.2",
+    "typescript": "~6.0.3"
+  },
+  "dependencies": {
+    "aws-cdk-lib": "2.255.0",
+    "constructs": "^10.3.0",
+    "turbo": "^2.9.14"
+  },
+  "peerDependencies": {
+    "aws-cdk-lib": "2.137.0",
+    "constructs": "^10.3.0"
+  }
+}
