@@ -22,7 +22,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         // migrations: [__dirname + '/../migrations/*{.ts,.js}'],
         // autoLoadEntities: true,
         // synchronize: true,
-        ssl: {  rejectUnauthorized: false, },
+        ssl: { rejectUnauthorized: false },
         connectTimeoutMS: 15000,
       }),
     }),

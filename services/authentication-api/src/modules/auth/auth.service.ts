@@ -1,50 +1,35 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
-import * as bcrypt from 'bcryptjs';
-import * as jwt from 'jsonwebtoken';
+import { Injectable } from '@nestjs/common';
 
-const SECRET_KEY = process.env.SECRET_KEY || 'dev-secret';
-const GOOGLE_USER_INFO_URL = 'https://www.googleapis.com/oauth2/v2/userinfo';
+import { DatabaseModule } from '../../database/database.module';
 
-interface User {
-  userId: string;
-  email: string;
-  userName: string;
-  password: string;
-  recoveryCode?: string;
-  recoveryCodeExpiry?: string;
+interface AuthServiceInterface {
+  signIn(email: string, password: string): Promise<void>;
+  signUp(email: string, password: string, userName: string): Promise<void>;
+  signOut(): Promise<void>;
+  refresh(token: string): Promise<void>;
+  sendRecoveryCode(email: string): Promise<void>;
+  verifyRecoveryCode(email: string, code: string): Promise<void>;
+  resetPassword(token: string, newPassword: string): Promise<void>;
+  googleSignIn(accessToken: string): Promise<void>;
 }
 
 @Injectable()
-export class AuthService {
+export class AuthService implements AuthServiceInterface {
+  constructor(private readonly dbService: DatabaseModule) {}
 
+  async signIn(email, password) {}
 
-  async signIn(email: string, password: string) {
+  async signUp(email, password, userName) {}
 
-  }
+  async signOut() {}
 
-  async signUp(email: string, password: string, userName: string) {
+  async refresh(token) {}
 
-  }
+  async sendRecoveryCode(email) {}
 
-  signOut() {}
+  async verifyRecoveryCode(email, code) {}
 
-  refresh(token: string) {}
+  async resetPassword(token, newPassword) {}
 
-  async sendRecoveryCode(email: string) {
-
-  }
-
-  verifyRecoveryCode(email: string, code: string) {
-
-  }
-
-  async resetPassword(token: string, newPassword: string) {  }
-
-  async googleSignIn(accessToken: string) {
-  }
+  async googleSignIn(accessToken) {}
 }
