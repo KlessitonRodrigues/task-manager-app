@@ -2,13 +2,14 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { UserEntity } from '../modules/users/entity/user.entity';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
     }),
-
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
@@ -24,6 +25,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         // synchronize: true,
         ssl: { rejectUnauthorized: false },
         connectTimeoutMS: 15000,
+        entities: [UserEntity],
       }),
     }),
   ],
