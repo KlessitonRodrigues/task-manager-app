@@ -1,0 +1,12 @@
+{
+  "metadata.title": "Aplicação de Tradução",
+  "metadata.description": "Uma aplicação de tradução modular construída com seções e componentes reutilizáveis.",
+  "navbar.title": "Aplicação de Tradução",
+  "translator.title": "Tradutor",
+  "translator.description": "Digite o texto na caixa de entrada abaixo e clique em 'Traduzir' para ver a tradução.",
+  "translator.textPlaceholder": "Digite o texto que deseja traduzir aqui...",
+  "translator.resultPlaceholder": "A tradução aparecerá aqui...",
+  "translator.translateButton": "Traduzir",
+  "translator.clearButton": "Limpar",
+  "translator.detectLanguage": "Detectar idioma"
+}

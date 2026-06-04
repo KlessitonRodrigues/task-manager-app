@@ -1,0 +1,43 @@
+{
+  "name": "@applications/task-manager-app",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev -p 3001",
+    "build": "next build",
+    "postbuild": "node ./lib/utils/compressImages.js",
+    "start": "next start -p 3001",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "@packages/daisy-ui-components": "*",
+    "@packages/common-types": "*",
+    "next": "16.1.6",
+    "react": "19.2.4",
+    "react-dom": "19.2.4"
+  },
+  "devDependencies": {
+    "@hookform/resolvers": "^5.2.2",
+    "@react-oauth/google": "^0.13.4",
+    "@tailwindcss/postcss": "^4",
+    "@tanstack/react-query": "^5.90.21",
+    "@trivago/prettier-plugin-sort-imports": "^6.0.2",
+    "@types/node": "^25.2.3",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19",
+    "axios": "^1.13.5",
+    "eslint": "^10.0.0",
+    "eslint-config-next": "16.1.6",
+    "glob": "^13.0.6",
+    "prettier": "^3.8.1",
+    "react-hook-form": "^7.71.1",
+    "react-icons": "^5.5.0",
+    "recharts": "^3.7.0",
+    "sharp": "^0.34.5",
+    "tailwindcss": "^4",
+    "typescript": "^5",
+    "zod": "^4.3.5",
+    "zustand": "^5.0.11"
+  }
+}

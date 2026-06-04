@@ -1,0 +1,53 @@
+swagger: '2.0'
+info:
+  title: Authentication API
+  description: Swagger 2.0 specification for the authentication-api service
+  version: '1.0.0'
+host: localhost:3000
+basePath: /
+schemes:
+  - http
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /:
+    get:
+      tags:
+        - Health
+      responses:
+        '200':
+          description: Successful response with greeting text.
+          schema:
+            type: string
+          examples:
+            application/json: Hello World!
+
+  /login:
+    post:
+      tags:
+        - Auth
+      summary: Login user
+      operationId: login
+      responses:
+        '201':
+          description: Successful login response.
+          schema:
+            type: string
+          examples:
+            application/json: Login endpoint
+
+  /register:
+    post:
+      tags:
+        - Auth
+      summary: Register user
+      operationId: register
+      responses:
+        '201':
+          description: Successful registration response.
+          schema:
+            type: string
+          examples:
+            application/json: Register endpoint

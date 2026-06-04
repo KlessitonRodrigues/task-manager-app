@@ -1,0 +1,9 @@
+:root {
+  --color-main: #7cb305;
+  --color-main-bg: #3f6600;
+}
+
+.topnavbar {
+  background-color: var(--color-main-bg);
+  color: var(--color-main-text);
+}

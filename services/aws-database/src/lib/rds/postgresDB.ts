@@ -33,7 +33,7 @@ export class PostgresRdsStack extends cdk.Stack {
       engine: rds.DatabaseInstanceEngine.postgres({
         version: rds.PostgresEngineVersion.VER_18_3,
       }),
-      instanceType: ec2.InstanceType.of(ec2.InstanceClass.T3, ec2.InstanceSize.MICRO),
+      instanceType: ec2.InstanceType.of(ec2.InstanceClass.T4G, ec2.InstanceSize.MICRO),
       vpc,
       vpcSubnets: {
         subnetType: ec2.SubnetType.PUBLIC,
@@ -42,7 +42,7 @@ export class PostgresRdsStack extends cdk.Stack {
       publiclyAccessible: true,
       multiAz: false,
       credentials: rds.Credentials.fromGeneratedSecret('postgres'),
-      databaseName: 'appdb',
+      databaseName: resourceNames.DATABASE_NAME,
       allocatedStorage: 20,
       maxAllocatedStorage: 20,
       port: 5432,
@@ -61,7 +61,7 @@ export class PostgresRdsStack extends cdk.Stack {
     });
 
     new cdk.CfnOutput(this, 'DbName', {
-      value: 'appdb',
+      value: resourceNames.DATABASE_NAME,
     });
 
     new cdk.CfnOutput(this, resourceNames.DATABASE_SECRET_NAME_OUTPUT, {
