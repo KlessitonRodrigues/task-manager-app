@@ -6,8 +6,7 @@ import { SwaggerModule } from './modules/docs/swegger.module';
 import { UserModule } from './modules/users/user.module';
 
 @Module({
-  imports: [],
-  controllers: [],
-  providers: [DatabaseModule, SwaggerModule, UserModule, AuthModule],
+  imports: [DatabaseModule, SwaggerModule, UserModule, AuthModule],
+  providers: [],
 })
 export class AppModule {}

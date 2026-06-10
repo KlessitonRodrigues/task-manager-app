@@ -1,7 +1,5 @@
 import { Injectable } from '@nestjs/common';
 
-import { DatabaseModule } from '../../database/database.module';
-
 interface AuthServiceInterface {
   signIn(email: string, password: string): Promise<void>;
   signUp(email: string, password: string, userName: string): Promise<void>;
@@ -15,7 +13,7 @@ interface AuthServiceInterface {
 
 @Injectable()
 export class AuthService implements AuthServiceInterface {
-  constructor(private readonly dbService: DatabaseModule) {}
+  constructor() {}
 
   async signIn(email, password) {}
 

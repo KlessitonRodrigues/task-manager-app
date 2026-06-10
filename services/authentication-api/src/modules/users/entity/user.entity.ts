@@ -17,18 +17,15 @@ export class UserEntity {
   @Column({ nullable: false, length: 255 })
   password!: string;
 
-  @Column({ nullable: false, length: 255 })
+  @Column({ length: 255 })
   recoveryToken!: string;
 
-  @Column({ nullable: false, length: 255 })
-  recoveryTokenExpiration!: string;
+  @Column({ type: 'timestamp', nullable: true })
+  recoveryTokenExpiration!: Date;
 
-  @Column({ nullable: false, length: 255 })
-  name!: string;
-
-  @CreateDateColumn()
+  @CreateDateColumn({ type: 'timestamp' })
   createdAt!: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ type: 'timestamp' })
   updatedAt!: Date;
 }

@@ -17,5 +17,7 @@ export class CreateUserDto extends createZodDto(
     name: userSchema.name,
     email: userSchema.email,
     password: userSchema.password,
+    recoveryToken: userSchema.recoveryToken,
+    recoveryTokenExpiration: userSchema.recoveryTokenExpiration,
   }),
 ) {}
