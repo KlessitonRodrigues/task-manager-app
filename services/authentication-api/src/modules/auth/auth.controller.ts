@@ -1,6 +1,16 @@
-import { Body, Controller, HttpCode, Inject, Post } from '@nestjs/common';
+import { Body, Controller, HttpCode, Inject, Post, UsePipes } from '@nestjs/common';
+import { ZodValidationPipe } from 'nestjs-zod';
 
 import { AuthService } from './auth.service';
+import {
+  GoogleSignInDto,
+  RefreshTokenDto,
+  ResetPasswordDto,
+  SendRecoveryCodeDto,
+  SignInDto,
+  SignUpDto,
+  VerifyRecoveryCodeDto,
+} from './dto/auth.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -11,14 +21,16 @@ export class AuthController {
 
   @Post('signin')
   @HttpCode(200)
-  signIn(@Body() body: { email: string; password: string }) {
-    return this.authService.signIn(body.email, body.password);
+  @UsePipes(ZodValidationPipe)
+  signIn(@Body() body: SignInDto) {
+    return this.authService.signIn(body);
   }
 
   @Post('signup')
   @HttpCode(201)
-  signUp(@Body() body: { email: string; password: string; userName: string }) {
-    return this.authService.signUp(body.email, body.password, body.userName);
+  @UsePipes(ZodValidationPipe)
+  signUp(@Body() body: SignUpDto) {
+    return this.authService.signUp(body);
   }
 
   @Post('signout')
@@ -29,31 +41,36 @@ export class AuthController {
 
   @Post('refresh-token')
   @HttpCode(200)
-  refresh(@Body() body: { token: string }) {
-    return this.authService.refresh(body.token);
+  @UsePipes(ZodValidationPipe)
+  refresh(@Body() body: RefreshTokenDto) {
+    return this.authService.refresh(body);
   }
 
   @Post('send-recovery-code')
   @HttpCode(200)
-  sendRecoveryCode(@Body() body: { email: string }) {
-    return this.authService.sendRecoveryCode(body.email);
+  @UsePipes(ZodValidationPipe)
+  sendRecoveryCode(@Body() body: SendRecoveryCodeDto) {
+    return this.authService.sendRecoveryCode(body);
   }
 
   @Post('verify-recovery-code')
   @HttpCode(200)
-  verifyRecoveryCode(@Body() body: { email: string; code: string }) {
-    return this.authService.verifyRecoveryCode(body.email, body.code);
+  @UsePipes(ZodValidationPipe)
+  verifyRecoveryCode(@Body() body: VerifyRecoveryCodeDto) {
+    return this.authService.verifyRecoveryCode(body);
   }
 
   @Post('reset-password')
   @HttpCode(200)
-  resetPassword(@Body() body: { token: string; newPassword: string }) {
-    return this.authService.resetPassword(body.token, body.newPassword);
+  @UsePipes(ZodValidationPipe)
+  resetPassword(@Body() body: ResetPasswordDto) {
+    return this.authService.resetPassword(body);
   }
 
   @Post('google')
   @HttpCode(200)
-  googleSignIn(@Body() body: { token: string }) {
-    return this.authService.googleSignIn(body.token);
+  @UsePipes(ZodValidationPipe)
+  googleSignIn(@Body() body: GoogleSignInDto) {
+    return this.authService.googleSignIn(body);
   }
 }

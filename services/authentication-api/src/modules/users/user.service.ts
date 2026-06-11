@@ -2,15 +2,15 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { CreateUserDto } from './dto/user.dto';
+import { CreateUserDto, GetUserResponseDto } from './dto/user.dto';
 import { UserEntity } from './entity/user.entity';
 
 interface IUserService {
-  findAll(): Promise<UserEntity[]>;
-  findOne(id: number): Promise<UserEntity | null>;
-  createUser(user: CreateUserDto): Promise<UserEntity>;
-  updateUser(id: number, user: CreateUserDto): Promise<UserEntity | null>;
-  patchUser(id: number, user: CreateUserDto): Promise<UserEntity | null>;
+  findAll(): Promise<GetUserResponseDto[]>;
+  findOne(id: number): Promise<GetUserResponseDto | null>;
+  createUser(user: CreateUserDto): Promise<GetUserResponseDto>;
+  updateUser(id: number, user: CreateUserDto): Promise<GetUserResponseDto | null>;
+  patchUser(id: number, user: CreateUserDto): Promise<GetUserResponseDto | null>;
   deleteUser(id: number): Promise<void>;
 }
 
@@ -21,25 +21,28 @@ export class UserService implements IUserService {
     private readonly userRepository: Repository<UserEntity>,
   ) {}
 
-  async findAll(): Promise<UserEntity[]> {
-    return await this.userRepository.find();
+  async findAll(): Promise<GetUserResponseDto[]> {
+    const dbUsers = await this.userRepository.find();
+    return dbUsers.map(user => GetUserResponseDto.create(user));
   }
 
-  async findOne(id: number): Promise<UserEntity | null> {
-    return await this.userRepository.findOneBy({ id });
+  async findOne(id: number): Promise<GetUserResponseDto | null> {
+    const user = await this.userRepository.findOneBy({ id });
+    return user ? GetUserResponseDto.create(user) : null;
   }
 
-  async createUser(user: CreateUserDto): Promise<UserEntity> {
+  async createUser(user: CreateUserDto): Promise<GetUserResponseDto> {
     const newUser = this.userRepository.create(user);
-    return this.userRepository.save(newUser);
+    const savedUser = await this.userRepository.save(newUser);
+    return GetUserResponseDto.create(savedUser);
   }
 
-  async updateUser(id: number, user: CreateUserDto): Promise<UserEntity | null> {
+  async updateUser(id: number, user: CreateUserDto): Promise<GetUserResponseDto | null> {
     await this.userRepository.update(id, user);
     return this.findOne(id);
   }
 
-  async patchUser(id: number, user: CreateUserDto): Promise<UserEntity | null> {
+  async patchUser(id: number, user: CreateUserDto): Promise<GetUserResponseDto | null> {
     await this.userRepository.update(id, user);
     return this.findOne(id);
   }

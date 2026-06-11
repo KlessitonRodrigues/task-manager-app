@@ -3,21 +3,35 @@ import { z } from 'zod';
 
 const userSchema = {
   id: z.number().int(),
-  email: z.string().email(),
-  password: z.string(),
-  recoveryToken: z.string(),
-  recoveryTokenExpiration: z.string(),
-  name: z.string(),
+  email: z.string().email().max(128),
+  password: z.string().min(8).max(128),
+  name: z.string().max(128),
   createdAt: z.date(),
   updatedAt: z.date(),
 };
+
+export class GetUserResponseDto extends createZodDto(
+  z.object({
+    id: userSchema.id,
+    name: userSchema.name,
+    email: userSchema.email,
+    createdAt: userSchema.createdAt,
+    updatedAt: userSchema.updatedAt,
+  }),
+) {}
 
 export class CreateUserDto extends createZodDto(
   z.object({
     name: userSchema.name,
     email: userSchema.email,
     password: userSchema.password,
-    recoveryToken: userSchema.recoveryToken,
-    recoveryTokenExpiration: userSchema.recoveryTokenExpiration,
+  }),
+) {}
+
+export class UpdateUserDto extends createZodDto(
+  z.object({
+    name: userSchema.name.optional(),
+    email: userSchema.email.optional(),
+    password: userSchema.password.optional(),
   }),
 ) {}

@@ -14,10 +14,13 @@ export class UserEntity {
   @Column({ unique: true, nullable: false, length: 255 })
   email!: string;
 
+  @Column({ length: 255 })
+  name!: string;
+
   @Column({ nullable: false, length: 255 })
   password!: string;
 
-  @Column({ length: 255 })
+  @Column({ length: 255, nullable: true })
   recoveryToken!: string;
 
   @Column({ type: 'timestamp', nullable: true })

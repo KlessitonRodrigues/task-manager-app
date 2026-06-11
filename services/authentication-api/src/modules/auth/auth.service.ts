@@ -1,33 +1,76 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+
+import { UserEntity } from '../users/entity/user.entity';
+import {
+  GoogleSignInDto,
+  RefreshTokenDto,
+  ResetPasswordDto,
+  SendRecoveryCodeDto,
+  SignInDto,
+  SignInResponseDto,
+  SignUpDto,
+  SignUpResponseDto,
+  VerifyRecoveryCodeDto,
+} from './dto/auth.dto';
 
 interface AuthServiceInterface {
-  signIn(email: string, password: string): Promise<void>;
-  signUp(email: string, password: string, userName: string): Promise<void>;
+  signIn(data: SignInDto): Promise<SignInResponseDto | null>;
+  signUp(data: SignUpDto): Promise<SignUpResponseDto | null>;
   signOut(): Promise<void>;
-  refresh(token: string): Promise<void>;
-  sendRecoveryCode(email: string): Promise<void>;
-  verifyRecoveryCode(email: string, code: string): Promise<void>;
-  resetPassword(token: string, newPassword: string): Promise<void>;
-  googleSignIn(accessToken: string): Promise<void>;
+  refresh(data: RefreshTokenDto): Promise<RefreshTokenDto>;
+  sendRecoveryCode(data: SendRecoveryCodeDto): Promise<void>;
+  verifyRecoveryCode(data: VerifyRecoveryCodeDto): Promise<void>;
+  resetPassword(data: ResetPasswordDto): Promise<void>;
+  googleSignIn(data: GoogleSignInDto): Promise<void>;
 }
 
 @Injectable()
 export class AuthService implements AuthServiceInterface {
-  constructor() {}
+  constructor(
+    @InjectRepository(UserEntity)
+    private readonly userRepository: Repository<UserEntity>,
+  ) {}
 
-  async signIn(email, password) {}
+  async signIn(data: SignInDto): Promise<SignInResponseDto | null> {
+    const user = await this.userRepository.findOne({ where: { email: data.email } });
+    if (!user) return null;
 
-  async signUp(email, password, userName) {}
+    return {
+      accessToken: 'dummyAccessToken',
+      email: user.email,
+      name: user.name,
+    };
+  }
+
+  async signUp(data: SignUpDto): Promise<SignUpResponseDto | null> {
+    const existingUser = await this.userRepository.findOne({ where: { email: data.email } });
+    if (existingUser) return null;
+
+    const newUser = this.userRepository.create({
+      email: data.email,
+      password: data.password,
+    });
+    await this.userRepository.save(newUser);
+
+    return {
+      email: newUser.email,
+      name: newUser.name,
+    };
+  }
 
   async signOut() {}
 
-  async refresh(token) {}
+  async refresh(data: RefreshTokenDto): Promise<RefreshTokenDto> {
+    return { accessToken: 'newDummyAccessToken' };
+  }
 
-  async sendRecoveryCode(email) {}
+  async sendRecoveryCode(data: SendRecoveryCodeDto): Promise<void> {}
 
-  async verifyRecoveryCode(email, code) {}
+  async verifyRecoveryCode(data: VerifyRecoveryCodeDto): Promise<void> {}
 
-  async resetPassword(token, newPassword) {}
+  async resetPassword(data: ResetPasswordDto): Promise<void> {}
 
-  async googleSignIn(accessToken) {}
+  async googleSignIn(data: GoogleSignInDto): Promise<void> {}
 }
