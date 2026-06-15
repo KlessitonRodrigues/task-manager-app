@@ -1,14 +1,23 @@
 {
   "name": "@packages/common-resources",
   "version": "1.0.0",
-  "main": "./index.ts",
-  "types": "./index.ts",
-  "license": "MIT",
-  "devDependencies": {
-    "typescript": "^6.0.3",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsc -p tsconfig.json --watch",
+    "postinstall": "yarn build"
+  },
+  "dependencies": {
     "zod": "^4.3.6"
   },
+  "devDependencies": {
+    "typescript": "^6.0.3"
+  },
   "exports": {
-    ".": "./index.ts"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
   }
 }

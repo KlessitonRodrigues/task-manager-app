@@ -1,4 +1,4 @@
-const formErrors = {
+export const formErrors = {
   en: {
     REQUIRED: "Required field",
     INVALID_EMAIL: "Invalid email address",
@@ -48,5 +48,3 @@ const formErrors = {
     MAXIMUM_LENGTH_EXCEEDED: "Comprimento máximo excedido",
   },
 };
-
-export default formErrors;

@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { COMMON } from "../@types/common";
-import formErrors from "../constants/formErrors";
+import { formErrors } from "../constants/formErrors";
 
 export const createTransactionSchemas = (
   options: COMMON.CreateSchemaOptions,

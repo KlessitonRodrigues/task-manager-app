@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { COMMON } from "../@types/common";
-import formErrors from "../constants/formErrors";
+import { formErrors } from "../constants/formErrors";
 
 export const createAuthSchemas = (options: COMMON.CreateSchemaOptions) => {
   const err = formErrors[options.lang];
