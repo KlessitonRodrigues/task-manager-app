@@ -1,18 +1,18 @@
 import { z } from "zod";
-import { dictionaries } from "../constants/dictionary";
-import { COMMON } from "../types/common";
+import { COMMON } from "../@types/common";
+import formErrors from "../constants/formErrors";
 
 export const createTransactionSchemas = (
   options: COMMON.CreateSchemaOptions,
 ) => {
-  const dictionary = dictionaries[options.lang];
+  const err = formErrors[options.lang];
 
   const transactionSchema = {
     id: z.string().default(""),
-    name: z.string().min(3, dictionary.REQUIRED).default(""),
+    name: z.string().min(3, err.REQUIRED).default(""),
     date: z.string().default(""),
-    type: z.string().min(1, dictionary.REQUIRED).default(""),
-    value: z.coerce.number().positive(dictionary.MUST_BE_POSITIVE).default(0),
+    type: z.string().min(1, err.REQUIRED).default(""),
+    value: z.coerce.number().positive(err.MUST_BE_POSITIVE).default(0),
   };
 
   return {

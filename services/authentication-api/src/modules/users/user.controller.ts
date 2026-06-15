@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UsePipes } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UsePipes } from '@nestjs/common';
 import { ZodValidationPipe } from 'nestjs-zod';
 
 import { CreateUserDto } from './dto/user.dto';
@@ -14,7 +14,7 @@ export class UserController {
   }
 
   @Get(':id')
-  async findOne(@Body('id') id: number) {
+  async findOne(@Param('id') id: number) {
     return this.userService.findOne(id);
   }
 
@@ -26,18 +26,18 @@ export class UserController {
 
   @Post(':id')
   @UsePipes(ZodValidationPipe)
-  async updateUser(@Body('id') id: number, @Body() user: CreateUserDto) {
+  async updateUser(@Param('id') id: number, @Body() user: CreateUserDto) {
     return this.userService.updateUser(id, user);
   }
 
   @Post(':id/patch')
   @UsePipes(ZodValidationPipe)
-  async patchUser(@Body('id') id: number, @Body() user: CreateUserDto) {
+  async patchUser(@Param('id') id: number, @Body() user: CreateUserDto) {
     return this.userService.patchUser(id, user);
   }
 
   @Post(':id/delete')
-  async deleteUser(@Body('id') id: number) {
+  async deleteUser(@Param('id') id: number) {
     await this.userService.deleteUser(id);
     return { message: 'User deleted successfully' };
   }

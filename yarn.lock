@@ -1828,6 +1828,9 @@
   dependencies:
     consola "^3.2.3"
 
+"@packages/common-resources@./packages/common-resources/":
+  version "1.0.0"
+
 "@paralleldrive/cuid2@^2.2.2":
   version "2.3.1"
   resolved "https://registry.npmjs.org/@paralleldrive/cuid2/-/cuid2-2.3.1.tgz"

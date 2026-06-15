@@ -2,15 +2,16 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
+import { ErrorDto } from '../common/dto/errorResponse';
 import { CreateUserDto, GetUserResponseDto } from './dto/user.dto';
 import { UserEntity } from './entity/user.entity';
 
 interface IUserService {
   findAll(): Promise<GetUserResponseDto[]>;
-  findOne(id: number): Promise<GetUserResponseDto | null>;
+  findOne(id: number): Promise<GetUserResponseDto | ErrorDto>;
   createUser(user: CreateUserDto): Promise<GetUserResponseDto>;
-  updateUser(id: number, user: CreateUserDto): Promise<GetUserResponseDto | null>;
-  patchUser(id: number, user: CreateUserDto): Promise<GetUserResponseDto | null>;
+  updateUser(id: number, user: CreateUserDto): Promise<GetUserResponseDto | ErrorDto>;
+  patchUser(id: number, user: CreateUserDto): Promise<GetUserResponseDto | ErrorDto>;
   deleteUser(id: number): Promise<void>;
 }
 
@@ -26,9 +27,10 @@ export class UserService implements IUserService {
     return dbUsers.map(user => GetUserResponseDto.create(user));
   }
 
-  async findOne(id: number): Promise<GetUserResponseDto | null> {
+  async findOne(id: number): Promise<GetUserResponseDto | ErrorDto> {
     const user = await this.userRepository.findOneBy({ id });
-    return user ? GetUserResponseDto.create(user) : null;
+    if (!user) return ErrorDto.create({ message: 'User not found' });
+    return GetUserResponseDto.create(user);
   }
 
   async createUser(user: CreateUserDto): Promise<GetUserResponseDto> {
@@ -37,12 +39,12 @@ export class UserService implements IUserService {
     return GetUserResponseDto.create(savedUser);
   }
 
-  async updateUser(id: number, user: CreateUserDto): Promise<GetUserResponseDto | null> {
+  async updateUser(id: number, user: CreateUserDto): Promise<GetUserResponseDto | ErrorDto> {
     await this.userRepository.update(id, user);
     return this.findOne(id);
   }
 
-  async patchUser(id: number, user: CreateUserDto): Promise<GetUserResponseDto | null> {
+  async patchUser(id: number, user: CreateUserDto): Promise<GetUserResponseDto | ErrorDto> {
     await this.userRepository.update(id, user);
     return this.findOne(id);
   }

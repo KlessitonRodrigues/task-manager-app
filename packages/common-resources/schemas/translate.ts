@@ -1,24 +1,21 @@
 import { z } from "zod";
-import { dictionaries } from "../constants/dictionary";
-import { COMMON } from "../types/common";
+import { COMMON } from "../@types/common";
+import formErrors from "../constants/formErrors";
 
 export const createTranslateSchemas = (options: COMMON.CreateSchemaOptions) => {
-  const dictionary = dictionaries[options.lang];
+  const err = formErrors[options.lang];
 
   const translateSchema = {
     text: z
-      .string(dictionary.REQUIRED)
+      .string(err.REQUIRED)
       .trim()
-      .min(1, dictionary.REQUIRED)
-      .max(500, dictionary.MAXIMUM_LENGTH_EXCEEDED),
-    targetLanguageCode: z
-      .string(dictionary.REQUIRED)
-      .trim()
-      .min(2, dictionary.REQUIRED),
+      .min(1, err.REQUIRED)
+      .max(500, err.MAXIMUM_LENGTH_EXCEEDED),
+    targetLanguageCode: z.string(err.REQUIRED).trim().min(2, err.REQUIRED),
     sourceLanguageCode: z
-      .string(dictionary.REQUIRED)
+      .string(err.REQUIRED)
       .trim()
-      .min(2, dictionary.REQUIRED)
+      .min(2, err.REQUIRED)
       .optional(),
   };
 
