@@ -32,7 +32,6 @@ export class UpdateUserDto extends createZodDto(
   z.object({
     name: userSchema.name,
     email: userSchema.email,
-    password: userSchema.password,
   }),
 ) {}
 
@@ -40,6 +39,5 @@ export class PatchUserDto extends createZodDto(
   z.object({
     name: userSchema.name.optional(),
     email: userSchema.email.optional(),
-    password: userSchema.password.optional(),
   }),
 ) {}

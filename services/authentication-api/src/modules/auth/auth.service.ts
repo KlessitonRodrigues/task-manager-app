@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { apiErrors } from '@packages/common-resources';
+import { apiMessage } from '@packages/common-resources';
 import { Repository } from 'typeorm';
 
 import { ErrorDto } from '../common/dto/errorResponse';
@@ -38,7 +38,7 @@ export class AuthService implements AuthServiceInterface {
   async signIn(data: SignInDto): Promise<SignInResponseDto | ErrorDto> {
     try {
       const user = await this.userRepository.findOne({ where: { email: data.email } });
-      if (!user) return ErrorDto.create({ ...apiErrors.USER_NOT_FOUND });
+      if (!user) return ErrorDto.create({ ...apiMessage.USER_NOT_FOUND });
 
       return SignInResponseDto.create({
         accessToken: 'dummyAccessToken',
@@ -47,14 +47,14 @@ export class AuthService implements AuthServiceInterface {
       });
     } catch (error) {
       const details = error instanceof Error ? error.message : error;
-      return ErrorDto.create({ details, ...apiErrors.INTERNAL_SERVER_ERROR });
+      return ErrorDto.create({ details, ...apiMessage.INTERNAL_SERVER_ERROR });
     }
   }
 
   async signUp(data: SignUpDto): Promise<SignUpResponseDto | ErrorDto> {
     try {
       const existingUser = await this.userRepository.findOne({ where: { email: data.email } });
-      if (existingUser) return ErrorDto.create({ ...apiErrors.INTERNAL_SERVER_ERROR });
+      if (existingUser) return ErrorDto.create({ ...apiMessage.USER_ALREADY_EXISTS });
 
       const newUser = this.userRepository.create({
         email: data.email,
@@ -69,7 +69,7 @@ export class AuthService implements AuthServiceInterface {
       });
     } catch (error) {
       const details = error instanceof Error ? error.message : error;
-      return ErrorDto.create({ details, ...apiErrors.INTERNAL_SERVER_ERROR });
+      return ErrorDto.create({ details, ...apiMessage.INTERNAL_SERVER_ERROR });
     }
   }
 
@@ -78,7 +78,7 @@ export class AuthService implements AuthServiceInterface {
       return { message: 'Signed out successfully' };
     } catch (error) {
       const details = error instanceof Error ? error.message : error;
-      return ErrorDto.create({ details, ...apiErrors.INTERNAL_SERVER_ERROR });
+      return ErrorDto.create({ details, ...apiMessage.INTERNAL_SERVER_ERROR });
     }
   }
 
@@ -87,31 +87,31 @@ export class AuthService implements AuthServiceInterface {
       return RefreshTokenDto.create({ accessToken: 'newDummyAccessToken' });
     } catch (error) {
       const details = error instanceof Error ? error.message : error;
-      return ErrorDto.create({ details, ...apiErrors.INTERNAL_SERVER_ERROR });
+      return ErrorDto.create({ details, ...apiMessage.INTERNAL_SERVER_ERROR });
     }
   }
 
   async sendRecoveryCode(data: SendRecoveryCodeDto): Promise<{ message: string } | ErrorDto> {
     try {
       const user = await this.userRepository.findOne({ where: { email: data.email } });
-      if (!user) return ErrorDto.create({ ...apiErrors.USER_NOT_FOUND });
+      if (!user) return ErrorDto.create({ ...apiMessage.USER_NOT_FOUND });
 
       return { message: 'Recovery code sent successfully' };
     } catch (error) {
       const details = error instanceof Error ? error.message : error;
-      return ErrorDto.create({ details, ...apiErrors.INTERNAL_SERVER_ERROR });
+      return ErrorDto.create({ details, ...apiMessage.INTERNAL_SERVER_ERROR });
     }
   }
 
   async verifyRecoveryCode(data: VerifyRecoveryCodeDto): Promise<{ message: string } | ErrorDto> {
     try {
       const user = await this.userRepository.findOne({ where: { email: data.email } });
-      if (!user) return ErrorDto.create({ ...apiErrors.USER_NOT_FOUND });
+      if (!user) return ErrorDto.create({ ...apiMessage.USER_NOT_FOUND });
 
       return { message: 'Recovery code verified successfully' };
     } catch (error) {
       const details = error instanceof Error ? error.message : error;
-      return ErrorDto.create({ details, ...apiErrors.INTERNAL_SERVER_ERROR });
+      return ErrorDto.create({ details, ...apiMessage.INTERNAL_SERVER_ERROR });
     }
   }
 
@@ -120,7 +120,7 @@ export class AuthService implements AuthServiceInterface {
       return { message: 'Password reset successfully' };
     } catch (error) {
       const details = error instanceof Error ? error.message : error;
-      return ErrorDto.create({ details, ...apiErrors.INTERNAL_SERVER_ERROR });
+      return ErrorDto.create({ details, ...apiMessage.INTERNAL_SERVER_ERROR });
     }
   }
 
@@ -133,7 +133,7 @@ export class AuthService implements AuthServiceInterface {
       });
     } catch (error) {
       const details = error instanceof Error ? error.message : error;
-      return ErrorDto.create({ details, ...apiErrors.INTERNAL_SERVER_ERROR });
+      return ErrorDto.create({ details, ...apiMessage.INTERNAL_SERVER_ERROR });
     }
   }
 }

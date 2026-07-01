@@ -4,7 +4,7 @@ export * from "./@types/next";
 
 // Constants
 export * from "./constants/formErrors";
-export * from "./constants/apiErrors";
+export * from "./constants/apiMessage";
 
 // Schemas
 export * from "./schemas/auth";

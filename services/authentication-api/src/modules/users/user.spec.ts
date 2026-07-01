@@ -1,3 +1,4 @@
+import { apiMessage } from '@packages/common-resources';
 import axios from 'axios';
 import { randomUUID } from 'node:crypto';
 
@@ -30,11 +31,6 @@ describe('User API', () => {
   };
 
   let createdUserId: number;
-
-  afterAll(async () => {
-    if (!createdUserId) return;
-    await apiClient.delete(`/users/${createdUserId}`).catch(() => undefined);
-  });
 
   it('should create a new user and return 201 status', async () => {
     const response = await apiClient.post('/users', createUserDto);
@@ -101,9 +97,7 @@ describe('User API', () => {
     const response = await apiClient.delete(`/users/${createdUserId}`);
 
     expect(response.status).toBe(200);
-    expect(response.data).toEqual({
-      message: 'User deleted successfully',
-    });
+    expect(response.data).toEqual({ ...apiMessage.DELETED_SUCCESSFULLY });
   });
 
   it('should return 400 status for invalid user data', async () => {
@@ -118,5 +112,10 @@ describe('User API', () => {
         status: 400,
       },
     });
+  });
+
+  it('should clean up any test data', async () => {
+    if (!createdUserId) return;
+    await apiClient.delete(`/users/${createdUserId}`).catch(() => undefined);
   });
 });
