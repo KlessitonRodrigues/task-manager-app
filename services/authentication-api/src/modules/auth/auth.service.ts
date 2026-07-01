@@ -5,7 +5,7 @@ import * as bcrypt from 'bcryptjs';
 import * as jwt from 'jsonwebtoken';
 import { Repository } from 'typeorm';
 
-import { ErrorDto, SuccessDto } from '../common/dto/errorResponse';
+import { ErrorDto, SuccessDto } from '../common/dto/apiResponse';
 import { UserEntity } from '../users/entity/user.entity';
 import {
   GithubSignInDto,

@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { apiMessage } from '@packages/common-resources';
 import { Repository } from 'typeorm';
 
-import { ErrorDto, SuccessDto } from '../common/dto/errorResponse';
+import { ErrorDto, SuccessDto } from '../common/dto/apiResponse';
 import { CreateUserDto, GetUserResponseDto, PatchUserDto, UpdateUserDto } from './dto/user.dto';
 import { UserEntity } from './entity/user.entity';
 
