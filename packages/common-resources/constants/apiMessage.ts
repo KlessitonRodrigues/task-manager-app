@@ -1,4 +1,8 @@
 export const apiMessage = {
+  SUCCESS: {
+    code: "SUC000",
+    message: "Success",
+  },
   CREATED_SUCCESSFULLY: {
     code: "SUC001",
     message: "Created successfully",
@@ -14,6 +18,10 @@ export const apiMessage = {
   FETCHED_SUCCESSFULLY: {
     code: "SUC004",
     message: "Fetched successfully",
+  },
+  PASSWORD_RESET_SUCCESSFULLY: {
+    code: "SUC005",
+    message: "Password reset successfully",
   },
   INVALID_REQUEST: {
     code: "ERR000",

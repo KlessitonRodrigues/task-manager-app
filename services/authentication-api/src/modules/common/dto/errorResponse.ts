@@ -5,7 +5,7 @@ export class SuccessDto extends createZodDto(
   z.object({
     message: z.string(),
     code: z.string().optional(),
-    details: z.any().optional(),
+    data: z.any().optional(),
   }),
 ) {}
 

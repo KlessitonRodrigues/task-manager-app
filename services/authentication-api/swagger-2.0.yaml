@@ -4,31 +4,28 @@ info:
   description: |
     Swagger 2.0 specification for the authentication-api service
 
-    ## Custom Error Codes
+    ## API Response Codes
 
+    ### Success Codes
     | Code  | Message |
     |-------|---------|
-    | ERR001 | Required field |
-    | ERR002 | Invalid email address |
-    | ERR003 | Password must be at least 6 characters |
-    | ERR004 | Username must be at least 3 characters |
-    | ERR005 | Code must be at least 6 characters |
-    | ERR006 | Value must be a positive number |
-    | ERR007 | Invalid request body |
-    | ERR008 | User not found |
-    | ERR009 | No access token received |
-    | ERR010 | No verified email |
-    | ERR011 | Internal server error |
-    | ERR012 | Failed to fetch user information |
-    | ERR013 | Failed to fetch access token |
-    | ERR014 | Missing token |
-    | ERR015 | Invalid email or password |
-    | ERR016 | Signed out successfully |
-    | ERR017 | Error creating user |
-    | ERR018 | User registered successfully |
-    | ERR019 | Invalid recovery code |
-    | ERR020 | Expired recovery code |
-    | ERR021 | Missing email or code |
+    | SUC000 | Success |
+    | SUC001 | Created successfully |
+    | SUC002 | Updated successfully |
+    | SUC003 | Deleted successfully |
+    | SUC004 | Fetched successfully |
+
+    ### Error Codes
+    | Code  | Message |
+    |-------|---------|
+    | ERR000 | Invalid request |
+    | ERR001 | Internal server error |
+    | ERR002 | User not found |
+    | ERR003 | User already exists |
+    | ERR004 | Invalid credentials |
+    | ERR005 | Invalid token |
+    | ERR006 | Expired token |
+    | ERR007 | Unauthorized |
   version: '1.0.0'
 host: localhost:3000
 basePath: /
@@ -39,144 +36,22 @@ consumes:
 produces:
   - application/json
 
-x-custom-error-codes:
-  ERR001: Required field
-  ERR002: Invalid email address
-  ERR003: Password must be at least 6 characters
-  ERR004: Username must be at least 3 characters
-  ERR005: Code must be at least 6 characters
-  ERR006: Value must be a positive number
-  ERR007: Invalid request body
-  ERR008: User not found
-  ERR009: No access token received
-  ERR010: No verified email
-  ERR011: Internal server error
-  ERR012: Failed to fetch user information
-  ERR013: Failed to fetch access token
-  ERR014: Missing token
-  ERR015: Invalid email or password
-  ERR016: Signed out successfully
-  ERR017: Error creating user
-  ERR018: User registered successfully
-  ERR019: Invalid recovery code
-  ERR020: Expired recovery code
-  ERR021: Missing email or code
-
-definitions:
-  SignInRequest:
-    type: object
-    required:
-      - email
-      - password
-    properties:
-      email:
-        type: string
-        format: email
-      password:
-        type: string
-
-  SignUpRequest:
-    type: object
-    required:
-      - email
-      - password
-      - userName
-    properties:
-      email:
-        type: string
-        format: email
-      password:
-        type: string
-      userName:
-        type: string
-
-  TokenRequest:
-    type: object
-    required:
-      - token
-    properties:
-      token:
-        type: string
-
-  EmailRequest:
-    type: object
-    required:
-      - email
-    properties:
-      email:
-        type: string
-        format: email
-
-  VerifyRecoveryCodeRequest:
-    type: object
-    required:
-      - email
-      - code
-    properties:
-      email:
-        type: string
-        format: email
-      code:
-        type: string
-
-  ResetPasswordRequest:
-    type: object
-    required:
-      - token
-      - newPassword
-    properties:
-      token:
-        type: string
-      newPassword:
-        type: string
-
-  CreateUserRequest:
-    type: object
-    required:
-      - name
-      - email
-      - password
-      - recoveryToken
-      - recoveryTokenExpiration
-    properties:
-      name:
-        type: string
-      email:
-        type: string
-        format: email
-      password:
-        type: string
-      recoveryToken:
-        type: string
-      recoveryTokenExpiration:
-        type: string
-
-  User:
-    type: object
-    properties:
-      id:
-        type: integer
-      name:
-        type: string
-      email:
-        type: string
-        format: email
-      recoveryToken:
-        type: string
-      recoveryTokenExpiration:
-        type: string
-      createdAt:
-        type: string
-        format: date-time
-      updatedAt:
-        type: string
-        format: date-time
-
-  DeleteResponse:
-    type: object
-    properties:
-      message:
-        type: string
+x-api-response-codes:
+  # Success Codes
+  SUC000: Success
+  SUC001: Created successfully
+  SUC002: Updated successfully
+  SUC003: Deleted successfully
+  SUC004: Fetched successfully
+  # Error Codes
+  ERR000: Invalid request
+  ERR001: Internal server error
+  ERR002: User not found
+  ERR003: User already exists
+  ERR004: Invalid credentials
+  ERR005: Invalid token
+  ERR006: Expired token
+  ERR007: Unauthorized
 
 paths:
   /:
@@ -377,7 +252,7 @@ paths:
           description: User found.
           schema:
             $ref: '#/definitions/User'
-    post:
+    put:
       tags:
         - Users
       summary: Update user by ID
@@ -397,9 +272,7 @@ paths:
           description: User updated successfully.
           schema:
             $ref: '#/definitions/User'
-
-  /users/{id}/patch:
-    post:
+    patch:
       tags:
         - Users
       summary: Partially update user by ID
@@ -419,9 +292,7 @@ paths:
           description: User patched successfully.
           schema:
             $ref: '#/definitions/User'
-
-  /users/{id}/delete:
-    post:
+    delete:
       tags:
         - Users
       summary: Delete user by ID

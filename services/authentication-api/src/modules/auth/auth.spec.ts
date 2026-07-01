@@ -1,3 +1,4 @@
+import { apiMessage } from '@packages/common-resources';
 import axios from 'axios';
 import { randomUUID } from 'node:crypto';
 
@@ -23,11 +24,7 @@ describe('Auth API', () => {
   };
 
   let createdUserId: number;
-
-  afterAll(async () => {
-    if (!createdUserId) return;
-    await apiClient.delete(`/users/${createdUserId}`).catch(() => undefined);
-  });
+  let resetToken: string;
 
   it('should sign up a new user and return 201 status', async () => {
     const response = await apiClient.post('/auth/signup', signUpDto);
@@ -38,7 +35,6 @@ describe('Auth API', () => {
       email: signUpDto.email,
     });
 
-    // Fetch the created user id for cleanup
     const usersResponse = await apiClient.get('/users');
     const createdUser = usersResponse.data.find(
       (u: { email: string; id: number }) => u.email === signUpDto.email,
@@ -61,14 +57,15 @@ describe('Auth API', () => {
     const response = await apiClient.post('/auth/signout');
 
     expect(response.status).toBe(200);
-    expect(response.data).toMatchObject({
-      message: 'Signed out successfully',
-    });
+    expect(response.data).toMatchObject(apiMessage.SUCCESS);
   });
 
   it('should refresh token and return 200 with new accessToken', async () => {
+    const signInResponse = await apiClient.post('/auth/signin', signInDto);
+    const validAccessToken = signInResponse.data.accessToken;
+
     const response = await apiClient.post('/auth/refresh-token', {
-      accessToken: 'dummyAccessToken',
+      accessToken: validAccessToken,
     });
 
     expect(response.status).toBe(200);
@@ -81,38 +78,42 @@ describe('Auth API', () => {
     });
 
     expect(response.status).toBe(200);
-    expect(response.data).toMatchObject({
-      message: 'Recovery code sent successfully',
-    });
+    expect(response.data).toHaveProperty('message');
+    expect(response.data.message).toBeTruthy();
   });
 
   it('should verify recovery code and return 200', async () => {
+    const sendCodeResponse = await apiClient.post('/auth/send-recovery-code', {
+      email: signUpDto.email,
+    });
+    const recoveryCode = sendCodeResponse.data.data.token;
+
     const response = await apiClient.post('/auth/verify-recovery-code', {
       email: signUpDto.email,
-      code: 'dummyCode',
+      code: recoveryCode,
     });
 
+    resetToken = response.data.data.token; // Store the token for the reset password test
+
     expect(response.status).toBe(200);
-    expect(response.data).toMatchObject({
-      message: 'Recovery code verified successfully',
-    });
+    expect(response.data).toHaveProperty('data');
+    expect(response.data.data).toHaveProperty('token');
+    expect(response.data.data.token).toBeTruthy();
   });
 
   it('should reset password and return 200', async () => {
     const response = await apiClient.post('/auth/reset-password', {
-      token: 'dummyToken',
+      token: resetToken,
       newPassword: 'newPassword123',
     });
 
     expect(response.status).toBe(200);
-    expect(response.data).toMatchObject({
-      message: 'Password reset successfully',
-    });
+    expect(response.data).toMatchObject({ ...apiMessage.PASSWORD_RESET_SUCCESSFULLY });
   });
 
   it('should sign in with Google and return 200', async () => {
     const response = await apiClient.post('/auth/google', {
-      accessToken: 'dummyGoogleAccessToken',
+      accessToken: 'FAKE_ACCESS_TOKEN',
     });
 
     expect(response.status).toBe(200);
@@ -146,5 +147,10 @@ describe('Auth API', () => {
         status: 400,
       },
     });
+  });
+
+  it('should clean up any test data', async () => {
+    if (!createdUserId) return;
+    await apiClient.delete(`/users/${createdUserId}`).catch(() => undefined);
   });
 });

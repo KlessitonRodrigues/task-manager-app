@@ -71,3 +71,9 @@ export class GoogleSignInDto extends createZodDto(
     accessToken: authSchema.accessToken,
   }),
 ) {}
+
+export class GithubSignInDto extends createZodDto(
+  z.object({
+    code: z.string(),
+  }),
+) {}
