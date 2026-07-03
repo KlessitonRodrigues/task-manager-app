@@ -1,5 +1,5 @@
 {
-  "name": "@applications/task-manager-app",
+  "name": "@applications/next-task-manage-app",
   "version": "0.1.0",
   "private": true,
   "type": "module",
