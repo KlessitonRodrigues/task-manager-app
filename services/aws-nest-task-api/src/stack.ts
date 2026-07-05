@@ -4,6 +4,8 @@ import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as nodeLambda from 'aws-cdk-lib/aws-lambda-nodejs';
 
+import { addCorsPreflight } from './utils/preflightResponse';
+
 export const stackName = 'NestApiStack';
 
 const lambdaPackages = [
@@ -11,6 +13,9 @@ const lambdaPackages = [
   '@nestjs/common',
   '@nestjs/platform-express',
   '@codegenie/serverless-express',
+  'reflect-metadata',
+  'dynamoose',
+  'nestjs-zod',
 ];
 
 type LambdaEnv = { [key: string]: string };
@@ -98,6 +103,12 @@ export class NestApiStack extends cdk.Stack {
     taskIdRoute.addMethod('PUT', new gateway.LambdaIntegration(nestApiLambda));
     // Delete a task by ID
     taskIdRoute.addMethod('DELETE', new gateway.LambdaIntegration(nestApiLambda));
+
+    // Permissions
+    taskTable.table.grantReadWriteData(nestApiLambda);
+
+    // API Preflight
+    addCorsPreflight(taskRoute);
   }
 }
 

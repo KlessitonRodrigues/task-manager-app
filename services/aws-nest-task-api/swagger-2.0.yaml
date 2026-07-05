@@ -1,8 +1,8 @@
 swagger: '2.0'
 info:
-  title: Authentication API
+  title: Task Management API
   description: |
-    Swagger 2.0 specification for the authentication-api service
+    Swagger 2.0 specification for the task-management-api service
 
     ## API Response Codes
 
@@ -52,6 +52,7 @@ x-api-response-codes:
   ERR005: Invalid token
   ERR006: Expired token
   ERR007: Unauthorized
+  ERR008: Task not found
 
 paths:
   /:
@@ -67,243 +68,200 @@ paths:
             type: string
           examples:
             application/json: Hello World!
-
-  /auth/signin:
-    post:
-      tags:
-        - Auth
-      summary: Sign in user
-      operationId: signIn
-      parameters:
-        - in: body
-          name: body
-          required: true
-          schema:
-            $ref: '#/definitions/SignInRequest'
-      responses:
-        '200':
-          description: Successful sign-in response.
-          schema:
-            type: object
-
-  /auth/signup:
-    post:
-      tags:
-        - Auth
-      summary: Sign up new user
-      operationId: signUp
-      parameters:
-        - in: body
-          name: body
-          required: true
-          schema:
-            $ref: '#/definitions/SignUpRequest'
-      responses:
-        '201':
-          description: User created successfully.
-          schema:
-            type: object
-
-  /auth/signout:
-    post:
-      tags:
-        - Auth
-      summary: Sign out user
-      operationId: signOut
-      responses:
-        '200':
-          description: Successful sign-out response.
-          schema:
-            type: object
-
-  /auth/refresh-token:
-    post:
-      tags:
-        - Auth
-      summary: Refresh access token
-      operationId: refreshToken
-      parameters:
-        - in: body
-          name: body
-          required: true
-          schema:
-            $ref: '#/definitions/TokenRequest'
-      responses:
-        '200':
-          description: Token refreshed successfully.
-          schema:
-            type: object
-
-  /auth/send-recovery-code:
-    post:
-      tags:
-        - Auth
-      summary: Send password recovery code to email
-      operationId: sendRecoveryCode
-      parameters:
-        - in: body
-          name: body
-          required: true
-          schema:
-            $ref: '#/definitions/EmailRequest'
-      responses:
-        '200':
-          description: Recovery code sent successfully.
-          schema:
-            type: object
-
-  /auth/verify-recovery-code:
-    post:
-      tags:
-        - Auth
-      summary: Verify password recovery code
-      operationId: verifyRecoveryCode
-      parameters:
-        - in: body
-          name: body
-          required: true
-          schema:
-            $ref: '#/definitions/VerifyRecoveryCodeRequest'
-      responses:
-        '200':
-          description: Recovery code verified successfully.
-          schema:
-            type: object
-
-  /auth/reset-password:
-    post:
-      tags:
-        - Auth
-      summary: Reset user password
-      operationId: resetPassword
-      parameters:
-        - in: body
-          name: body
-          required: true
-          schema:
-            $ref: '#/definitions/ResetPasswordRequest'
-      responses:
-        '200':
-          description: Password reset successfully.
-          schema:
-            type: object
-
-  /auth/google:
-    post:
-      tags:
-        - Auth
-      summary: Sign in with Google
-      operationId: googleSignIn
-      parameters:
-        - in: body
-          name: body
-          required: true
-          schema:
-            $ref: '#/definitions/TokenRequest'
-      responses:
-        '200':
-          description: Successful Google sign-in response.
-          schema:
-            type: object
-
-  /users:
+  /task:
     get:
       tags:
-        - Users
-      summary: Get all users
-      operationId: findAllUsers
+        - Task
+      summary: Get all tasks
+      operationId: findAllTasks
       responses:
         '200':
-          description: List of users.
+          description: List of tasks.
           schema:
             type: array
             items:
-              $ref: '#/definitions/User'
+              type: object
+              properties:
+                pk:
+                  type: string
+                  format: uuid
+                sk:
+                  type: string
+                name:
+                  type: string
+                description:
+                  type: string
+                status:
+                  type: string
+                priority:
+                  type: string
+                dueDate:
+                  type: string
+                progressList:
+                  type: array
+                  items:
+                    type: string
+                createdAt:
+                  type: string
     post:
       tags:
-        - Users
-      summary: Create a new user
-      operationId: createUser
+        - Task
+      summary: Create a new task
+      operationId: createTask
       parameters:
         - in: body
           name: body
           required: true
           schema:
-            $ref: '#/definitions/CreateUserRequest'
+            type: object
+            required:
+              - name
+            properties:
+              name:
+                type: string
+                minLength: 1
+                maxLength: 200
+              description:
+                type: string
+              status:
+                type: string
+                default: pending
+              priority:
+                type: string
+                default: normal
+              dueDate:
+                type: string
+              progressList:
+                type: array
+                items:
+                  type: string
       responses:
         '201':
-          description: User created successfully.
+          description: Task created successfully.
           schema:
-            $ref: '#/definitions/User'
+            type: object
+            properties:
+              pk:
+                type: string
+                format: uuid
+              sk:
+                type: string
+              name:
+                type: string
+              description:
+                type: string
+              status:
+                type: string
+              priority:
+                type: string
+              dueDate:
+                type: string
+              progressList:
+                type: array
+                items:
+                  type: string
+              createdAt:
+                type: string
 
-  /users/{id}:
+  /task/{id}:
     get:
       tags:
-        - Users
-      summary: Get user by ID
-      operationId: findOneUser
+        - Task
+      summary: Get task by ID
+      operationId: findOneTask
       parameters:
         - in: path
           name: id
           required: true
-          type: integer
+          type: string
       responses:
         '200':
-          description: User found.
+          description: Task found.
           schema:
-            $ref: '#/definitions/User'
+            type: object
+            properties:
+              pk:
+                type: string
+                format: uuid
+              sk:
+                type: string
+              name:
+                type: string
+              description:
+                type: string
+              status:
+                type: string
+              priority:
+                type: string
+              dueDate:
+                type: string
+              progressList:
+                type: array
+                items:
+                  type: string
+              createdAt:
+                type: string
+        '404':
+          description: Task not found.
+          schema:
+            type: object
     put:
       tags:
-        - Users
-      summary: Update user by ID
-      operationId: updateUser
+        - Task
+      summary: Update task by ID
+      operationId: updateTask
       parameters:
         - in: path
           name: id
           required: true
-          type: integer
+          type: string
         - in: body
           name: body
           required: true
           schema:
-            $ref: '#/definitions/CreateUserRequest'
+            type: object
+            properties:
+              name:
+                type: string
+                minLength: 1
+                maxLength: 200
+              description:
+                type: string
+              status:
+                type: string
+              priority:
+                type: string
+              dueDate:
+                type: string
+              progressList:
+                type: array
+                items:
+                  type: string
       responses:
         '200':
-          description: User updated successfully.
+          description: Task updated successfully.
           schema:
-            $ref: '#/definitions/User'
-    patch:
-      tags:
-        - Users
-      summary: Partially update user by ID
-      operationId: patchUser
-      parameters:
-        - in: path
-          name: id
-          required: true
-          type: integer
-        - in: body
-          name: body
-          required: true
+            type: object
+        '404':
+          description: Task not found.
           schema:
-            $ref: '#/definitions/CreateUserRequest'
-      responses:
-        '200':
-          description: User patched successfully.
-          schema:
-            $ref: '#/definitions/User'
+            type: object
     delete:
       tags:
-        - Users
-      summary: Delete user by ID
-      operationId: deleteUser
+        - Task
+      summary: Delete task by ID
+      operationId: deleteTask
       parameters:
         - in: path
           name: id
           required: true
-          type: integer
+          type: string
       responses:
         '200':
-          description: User deleted successfully.
+          description: Task deleted successfully.
           schema:
             $ref: '#/definitions/DeleteResponse'
+        '404':
+          description: Task not found.
+          schema:
+            type: object
