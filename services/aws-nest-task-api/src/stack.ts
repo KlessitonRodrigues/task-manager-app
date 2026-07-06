@@ -16,6 +16,8 @@ const lambdaPackages = [
   'reflect-metadata',
   'dynamoose',
   'nestjs-zod',
+  'rxjs',
+  'zod',
 ];
 
 type LambdaEnv = { [key: string]: string };
@@ -24,7 +26,7 @@ class NestApiLambda extends nodeLambda.NodejsFunction {
   constructor(scope: cdk.Stack, lambdaEnv: LambdaEnv, logGroup?: cdk.aws_logs.LogGroup) {
     const params: nodeLambda.NodejsFunctionProps = {
       runtime: lambda.Runtime.NODEJS_24_X,
-      memorySize: 1024,
+      memorySize: cdk.Size.mebibytes(512).toMebibytes(),
       timeout: cdk.Duration.seconds(10),
       handler: 'handler',
       functionName: `${stackName}-lambda`,

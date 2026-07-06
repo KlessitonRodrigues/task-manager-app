@@ -19,7 +19,8 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "cdk-synt": "cdk synthesize",
-    "cdk-deploy": "cdk deploy"
+    "cdk-deploy": "cdk deploy",
+    "log-group": "aws logs tail NestApiStack-log-group --follow"
   },
   "dependencies": {
     "@aws-sdk/rds-signer": "^3.1049.0",

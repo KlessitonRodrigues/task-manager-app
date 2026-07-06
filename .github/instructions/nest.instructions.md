@@ -156,6 +156,9 @@ export class UserEntity {
 
 // Must be integration tests using axios against a real running API — no mocking
 // Must throw early if BASE_URL env variable is not configured
+// Must to certify that data created in tests will be deleted in the cleanup test, even if a test fails
+// Must to include all code and constants inside the test "describe()" block
+// Must to create instances of DTOs from feature.dto.ts to mock data
 
 ```typescript
 const baseURL = dotenv.BASE_URL;
