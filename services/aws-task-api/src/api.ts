@@ -9,11 +9,11 @@ const cors = require('cors');
 
 const localRoutes = () => {
   const router = express.Router();
-  router.get('/task', expressToLambdaEvent(taskService.findAllTaskService));
-  router.get('/task/:id', expressToLambdaEvent(taskService.findOneTaskService));
-  router.post('/task', expressToLambdaEvent(taskService.createTaskService));
-  router.put('/task/:id', expressToLambdaEvent(taskService.updateTaskService));
-  router.delete('/task/:id', expressToLambdaEvent(taskService.deleteTaskService));
+  router.get('/tasks', expressToLambdaEvent(taskService.findAllTaskService));
+  router.get('/tasks/:id', expressToLambdaEvent(taskService.findOneTaskService));
+  router.post('/tasks', expressToLambdaEvent(taskService.createTaskService));
+  router.put('/tasks/:id', expressToLambdaEvent(taskService.updateTaskService));
+  router.delete('/tasks/:id', expressToLambdaEvent(taskService.deleteTaskService));
   return router;
 };
 

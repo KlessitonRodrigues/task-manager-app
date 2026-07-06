@@ -1,6 +1,9 @@
 import * as cdk from 'aws-cdk-lib';
 import * as gateway from 'aws-cdk-lib/aws-apigateway';
 
+import { apiMessage } from '../../../../packages/common-resources/dist/constants/apiMessage';
+import { ErrorDto } from '../lib/lambda/common/api.dto';
+
 export type LambdasProps = Record<string, string>;
 
 export type APIGatewayHandler = (event: any) => Promise<any>;
@@ -75,4 +78,16 @@ export const createResponseWithOrigin: CreateResponseWithCookiesOptions = (
       ...headers,
     },
   };
+};
+
+export const badRequest = (details: unknown) => {
+  return createResponse(400, ErrorDto.create({ ...apiMessage.INVALID_REQUEST, details }));
+};
+
+export const internalError = (err: any) => {
+  console.log(err);
+  return createResponse(
+    500,
+    ErrorDto.create({ details: err.message, ...apiMessage.INTERNAL_SERVER_ERROR }),
+  );
 };

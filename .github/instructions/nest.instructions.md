@@ -110,6 +110,8 @@ async findOne(@Param('id') id: string) {
 ## DTOs
 
 // Must use nestjs-zod — define a shared schema object and derive DTOs from it
+// Must use createZodDto() to derive DTOs from zod schemas
+// Must to use DTOs for request and response shapes, never use entities directly in controllers
 
 ```typescript
 const userSchema = {

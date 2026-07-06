@@ -1,9 +1,9 @@
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
 
-const taskSchema = {
+export const taskSchema = {
   pk: z.string().uuid(),
-  sk: z.string(),
+  sk: z.string().default('TASK'),
   name: z.string().min(1).max(200),
   description: z.string().optional(),
   status: z.string().default('pending'),
@@ -39,12 +39,14 @@ export class CreateTaskDto extends createZodDto(
 ) {}
 
 export class UpdateTaskDto extends createZodDto(
-  z.object({
-    name: taskSchema.name.optional(),
-    description: taskSchema.description,
-    status: taskSchema.status,
-    priority: taskSchema.priority,
-    dueDate: taskSchema.dueDate,
-    progressList: taskSchema.progressList,
-  }),
+  z
+    .object({
+      name: z.string().min(1).max(200),
+      description: z.string(),
+      status: z.string(),
+      priority: z.string(),
+      dueDate: z.string(),
+      progressList: z.array(z.string()),
+    })
+    .partial(),
 ) {}

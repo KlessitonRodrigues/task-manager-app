@@ -3,7 +3,7 @@ import axios from 'axios';
 import { randomUUID } from 'crypto';
 
 import dotenv from '../../../constants/dotenv';
-import { CreateTaskDto } from './task.dto';
+import { CreateTaskDto, UpdateTaskDto } from './task.dto';
 
 describe('Tasks API', () => {
   const baseURL = dotenv.TEST_API_URL;
@@ -11,19 +11,20 @@ describe('Tasks API', () => {
   const apiClient = axios.create({ baseURL });
 
   const testId = randomUUID().replace(/-/g, '');
-  const createTaskDto = CreateTaskDto.create({
+  const createTaskDto: CreateTaskDto = {
     name: `Test Task ${testId}`,
     description: `Description for task ${testId}`,
     status: 'pending',
     priority: 'normal',
     dueDate: '2026-12-31',
     progressList: [],
-  });
+  };
 
   let createdTaskId: string;
 
   it('should create a new task and return 200 status', async () => {
     const response = await apiClient.post('/tasks', createTaskDto);
+
     expect(response.status).toBe(200);
     expect(response.data).toMatchObject({
       name: createTaskDto.name,
@@ -69,7 +70,7 @@ describe('Tasks API', () => {
   });
 
   it('should update a task and return 200 status', async () => {
-    const updateDto = { name: `Updated Task ${testId}`, status: 'in_progress' };
+    const updateDto: UpdateTaskDto = { name: `Updated Task ${testId}`, status: 'in_progress' };
     const response = await apiClient.patch(`/tasks/${createdTaskId}`, updateDto);
     expect(response.status).toBe(200);
     expect(response.data).toMatchObject({

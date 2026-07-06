@@ -4,7 +4,7 @@ import { resourceNames } from '../../../constants/resources';
 
 const schema = new dynamoose.Schema({
   pk: { type: String, required: true, default: () => crypto.randomUUID() },
-  sk: { type: String, required: true },
+  sk: { type: String, required: true, default: 'TASK' },
   name: { type: String, required: true },
   description: { type: String },
   status: { type: String, required: true, default: 'pending' },
