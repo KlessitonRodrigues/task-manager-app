@@ -1,7 +1,5 @@
 import dotenv from './dotenv';
 
-export const lambdaPackages = [];
-
 export const resourceNames = {
   taskTable: dotenv.STACK_NAME + '-task-table',
   taskApiGateway: dotenv.STACK_NAME + '-task-api-gateway',

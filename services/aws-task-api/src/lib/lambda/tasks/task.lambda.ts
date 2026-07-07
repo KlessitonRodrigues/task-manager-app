@@ -2,80 +2,85 @@ import * as cdk from 'aws-cdk-lib';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as nodeLambda from 'aws-cdk-lib/aws-lambda-nodejs';
 
-import { lambdaPackages, resourceNames } from '../../../constants/resources';
-import { LambdaEnv } from '../../../stask';
+import { resourceNames } from '../../../constants/resources';
+import { environment } from '../../../stask';
+
+const nodeModules = ['zod', 'nestjs-zod', 'dynamoose'];
+const entry = __dirname + '/task.service.ts';
+const runtime = lambda.Runtime.NODEJS_22_X;
+const timeout = cdk.Duration.seconds(10);
 
 export class FindAllTaskLambda extends nodeLambda.NodejsFunction {
-  constructor(scope: cdk.Stack, lambdaEnv: LambdaEnv, logGroup?: cdk.aws_logs.LogGroup) {
+  constructor(scope: cdk.Stack, environment: environment, logGroup?: cdk.aws_logs.LogGroup) {
     super(scope, resourceNames.findAllTaskLambda, {
-      runtime: lambda.Runtime.NODEJS_22_X,
-      timeout: cdk.Duration.seconds(10),
+      runtime,
+      timeout,
+      entry,
+      environment,
+      logGroup,
       handler: 'findAllTaskService',
       functionName: resourceNames.findAllTaskLambda,
-      entry: __dirname + '/task.service.ts',
-      environment: lambdaEnv,
-      logGroup,
-      bundling: { environment: lambdaEnv, nodeModules: lambdaPackages },
+      bundling: { environment, nodeModules },
     });
   }
 }
 
 export class FindOneTaskLambda extends nodeLambda.NodejsFunction {
-  constructor(scope: cdk.Stack, lambdaEnv: LambdaEnv, logGroup?: cdk.aws_logs.LogGroup) {
+  constructor(scope: cdk.Stack, environment: environment, logGroup?: cdk.aws_logs.LogGroup) {
     super(scope, resourceNames.findOneTaskLambda, {
-      runtime: lambda.Runtime.NODEJS_22_X,
-      timeout: cdk.Duration.seconds(10),
+      runtime,
+      timeout,
+      entry,
+      environment,
+      logGroup,
       handler: 'findOneTaskService',
       functionName: resourceNames.findOneTaskLambda,
-      entry: __dirname + '/task.service.ts',
-      environment: lambdaEnv,
-      logGroup,
-      bundling: { environment: lambdaEnv, nodeModules: lambdaPackages },
+      bundling: { environment, nodeModules },
     });
   }
 }
 
 export class CreateTaskLambda extends nodeLambda.NodejsFunction {
-  constructor(scope: cdk.Stack, lambdaEnv: LambdaEnv, logGroup?: cdk.aws_logs.LogGroup) {
+  constructor(scope: cdk.Stack, environment: environment, logGroup?: cdk.aws_logs.LogGroup) {
     super(scope, resourceNames.createTaskLambda, {
-      runtime: lambda.Runtime.NODEJS_22_X,
-      timeout: cdk.Duration.seconds(10),
+      runtime,
+      timeout,
+      entry,
+      environment,
+      logGroup,
       handler: 'createTaskService',
       functionName: resourceNames.createTaskLambda,
-      entry: __dirname + '/task.service.ts',
-      environment: lambdaEnv,
-      logGroup,
-      bundling: { environment: lambdaEnv, nodeModules: lambdaPackages },
+      bundling: { environment, nodeModules },
     });
   }
 }
 
 export class UpdateTaskLambda extends nodeLambda.NodejsFunction {
-  constructor(scope: cdk.Stack, lambdaEnv: LambdaEnv, logGroup?: cdk.aws_logs.LogGroup) {
+  constructor(scope: cdk.Stack, environment: environment, logGroup?: cdk.aws_logs.LogGroup) {
     super(scope, resourceNames.updateTaskLambda, {
-      runtime: lambda.Runtime.NODEJS_22_X,
-      timeout: cdk.Duration.seconds(10),
+      runtime,
+      timeout,
+      entry,
+      environment,
+      logGroup,
       handler: 'updateTaskService',
       functionName: resourceNames.updateTaskLambda,
-      entry: __dirname + '/task.service.ts',
-      environment: lambdaEnv,
-      logGroup,
-      bundling: { environment: lambdaEnv, nodeModules: lambdaPackages },
+      bundling: { environment, nodeModules },
     });
   }
 }
 
 export class DeleteTaskLambda extends nodeLambda.NodejsFunction {
-  constructor(scope: cdk.Stack, lambdaEnv: LambdaEnv, logGroup?: cdk.aws_logs.LogGroup) {
+  constructor(scope: cdk.Stack, environment: environment, logGroup?: cdk.aws_logs.LogGroup) {
     super(scope, resourceNames.deleteTaskLambda, {
-      runtime: lambda.Runtime.NODEJS_22_X,
-      timeout: cdk.Duration.seconds(10),
+      runtime,
+      timeout,
+      entry,
+      logGroup,
+      environment,
       handler: 'deleteTaskService',
       functionName: resourceNames.deleteTaskLambda,
-      entry: __dirname + '/task.service.ts',
-      environment: lambdaEnv,
-      logGroup,
-      bundling: { environment: lambdaEnv, nodeModules: lambdaPackages },
+      bundling: { environment, nodeModules },
     });
   }
 }
