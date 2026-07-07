@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 
-import { APIGatewayHandler } from './aws';
+import { APIGatewayHandler } from './lambda';
 
 export const expressToLambdaEvent = (lambda: APIGatewayHandler) => {
   return async (req: Request, res: Response) => {

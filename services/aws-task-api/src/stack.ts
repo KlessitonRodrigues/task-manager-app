@@ -1,14 +1,15 @@
+import './config/dotenv'; // sort-imports-ignore
+
 import * as cdk from 'aws-cdk-lib';
 import * as gateway from 'aws-cdk-lib/aws-apigateway';
 
-import dotenv from './constants/dotenv';
+import dotenv from './constants/enviroment';
 import { resourceNames } from './constants/resources';
 import { TaskTable } from './lib/dynamodb/task.table';
 import { TaskAPIGateway } from './lib/gateway/task.gateway';
 import * as TaskLambdas from './lib/lambda/tasks/task.lambda';
 import { addCorsPreflight } from './utils/aws';
-
-export type environment = { [key: string]: string };
+import { environment } from './utils/lambda';
 
 export class NodeTemplateStack extends cdk.Stack {
   constructor(scope: cdk.App, props?: cdk.StackProps) {
@@ -40,16 +41,16 @@ export class NodeTemplateStack extends cdk.Stack {
     const taskApi = new TaskAPIGateway(this);
 
     // API Routes
-    // /token
-    const tokenRoute = taskApi.root.addResource('token');
-    tokenRoute.addMethod('POST', new gateway.LambdaIntegration(createTaskLambda));
-    tokenRoute.addMethod('GET', new gateway.LambdaIntegration(findAllTaskLambda));
-    tokenRoute.addMethod('PUT', new gateway.LambdaIntegration(updateTaskLambda));
+    // /tasks
+    const taskRoute = taskApi.root.addResource('tasks');
+    taskRoute.addMethod('POST', new gateway.LambdaIntegration(createTaskLambda));
+    taskRoute.addMethod('GET', new gateway.LambdaIntegration(findAllTaskLambda));
+    taskRoute.addMethod('PUT', new gateway.LambdaIntegration(updateTaskLambda));
 
-    // /token/{id}
-    const tokenIdRoute = tokenRoute.addResource('{id}');
-    tokenIdRoute.addMethod('GET', new gateway.LambdaIntegration(findOneTaskLambda));
-    tokenIdRoute.addMethod('DELETE', new gateway.LambdaIntegration(deleteTaskLambda));
+    // /tasks/{id}
+    const taskIdRoute = taskRoute.addResource('{id}');
+    taskIdRoute.addMethod('GET', new gateway.LambdaIntegration(findOneTaskLambda));
+    taskIdRoute.addMethod('DELETE', new gateway.LambdaIntegration(deleteTaskLambda));
 
     // Permissions
     taskTable.table.grantReadWriteData(createTaskLambda);
@@ -59,7 +60,7 @@ export class NodeTemplateStack extends cdk.Stack {
     taskTable.table.grantReadWriteData(deleteTaskLambda);
 
     // API Preflight
-    addCorsPreflight(tokenRoute);
+    addCorsPreflight(taskRoute);
   }
 }
 

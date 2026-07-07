@@ -3,9 +3,18 @@ import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as nodeLambda from 'aws-cdk-lib/aws-lambda-nodejs';
 
 import { resourceNames } from '../../../constants/resources';
-import { environment } from '../../../stask';
+import { environment } from '../../../utils/lambda';
 
-const nodeModules = ['zod', 'nestjs-zod', 'dynamoose'];
+const nodeModules = [
+  'zod',
+  'nestjs-zod',
+  '@nestjs/common',
+  'dynamoose',
+  '@nestjs/core',
+  'reflect-metadata',
+  'rxjs',
+];
+
 const entry = __dirname + '/task.service.ts';
 const runtime = lambda.Runtime.NODEJS_22_X;
 const timeout = cdk.Duration.seconds(10);

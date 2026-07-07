@@ -1,4 +1,4 @@
-import dotenv from './dotenv';
+import dotenv from './enviroment';
 
 export const resourceNames = {
   taskTable: dotenv.STACK_NAME + '-task-table',

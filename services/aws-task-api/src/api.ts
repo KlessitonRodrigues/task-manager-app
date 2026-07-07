@@ -1,4 +1,4 @@
-import './constants/dotenv'; // sort-imports-ignore
+import './config/dotenv'; // sort-imports-ignore
 
 import * as bodyparser from 'body-parser';
 import { expressToLambdaEvent } from './utils/express';

@@ -1,10 +1,11 @@
+import * as crypto from 'crypto';
 import * as dynamoose from 'dynamoose';
 
-import { resourceNames } from '../../../constants/resources';
+import dotenv from '../../../constants/enviroment';
 
 const schema = new dynamoose.Schema({
-  pk: { type: String, required: true, default: () => crypto.randomUUID() },
-  sk: { type: String, required: true, default: 'TASK' },
+  id: { type: String, required: true, default: () => crypto.randomUUID() },
+  type: { type: String, required: true, default: 'TASK' },
   name: { type: String, required: true },
   description: { type: String },
   status: { type: String, required: true, default: 'pending' },
@@ -16,6 +17,6 @@ const schema = new dynamoose.Schema({
 
 export class TaskModel {
   public readonly model = dynamoose.model('Tasks', schema, {
-    tableName: resourceNames.taskTable,
+    tableName: dotenv.TASK_TABLE_NAME,
   });
 }

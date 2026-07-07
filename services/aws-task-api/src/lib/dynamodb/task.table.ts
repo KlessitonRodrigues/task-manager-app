@@ -10,7 +10,7 @@ export class TaskTable {
     this.table = new dynamodb.Table(scope, resourceNames.taskTable, {
       tableName: resourceNames.taskTable,
       partitionKey: {
-        name: 'userId',
+        name: 'id',
         type: dynamodb.AttributeType.STRING,
       },
       billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,

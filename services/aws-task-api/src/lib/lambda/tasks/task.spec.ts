@@ -1,8 +1,10 @@
+import '../../../config/dotenv'; // sort-imports-ignore
+
 import { apiMessage } from '@packages/common-resources';
 import axios from 'axios';
 import { randomUUID } from 'crypto';
 
-import dotenv from '../../../constants/dotenv';
+import dotenv from '../../../constants/enviroment';
 import { CreateTaskDto, UpdateTaskDto } from './task.dto';
 
 describe('Tasks API', () => {
@@ -24,7 +26,6 @@ describe('Tasks API', () => {
 
   it('should create a new task and return 200 status', async () => {
     const response = await apiClient.post('/tasks', createTaskDto);
-
     expect(response.status).toBe(200);
     expect(response.data).toMatchObject({
       name: createTaskDto.name,
@@ -32,7 +33,7 @@ describe('Tasks API', () => {
       status: createTaskDto.status,
       priority: createTaskDto.priority,
     });
-    createdTaskId = response.data.pk;
+    createdTaskId = response.data.id;
     expect(createdTaskId).toBeDefined();
   });
 
@@ -52,7 +53,7 @@ describe('Tasks API', () => {
     const response = await apiClient.get(`/tasks/${createdTaskId}`);
     expect(response.status).toBe(200);
     expect(response.data).toMatchObject({
-      pk: createdTaskId,
+      id: createdTaskId,
       name: createTaskDto.name,
     });
   });
@@ -74,7 +75,7 @@ describe('Tasks API', () => {
     const response = await apiClient.put(`/tasks/${createdTaskId}`, updateDto);
     expect(response.status).toBe(200);
     expect(response.data).toMatchObject({
-      pk: createdTaskId,
+      id: createdTaskId,
       name: updateDto.name,
       status: updateDto.status,
     });
