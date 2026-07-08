@@ -1,4 +1,4 @@
-import { apiMessage } from '@packages/common-resources';
+import { apiMessage } from '@packages/common-resources/constants/apiMessage';
 
 import { ErrorDto } from '../lib/lambda/common/api.dto';
 

@@ -1,11 +1,11 @@
 import '../../../config/dotenv'; // sort-imports-ignore
 
-import { apiMessage } from '@packages/common-resources';
 import axios from 'axios';
 import { randomUUID } from 'crypto';
 
 import dotenv from '../../../constants/enviroment';
 import { CreateTaskDto, UpdateTaskDto } from './task.dto';
+import { apiMessage } from '@packages/common-resources/constants/apiMessage';
 
 describe('Tasks API', () => {
   const baseURL = dotenv.TEST_API_URL;
@@ -58,9 +58,9 @@ describe('Tasks API', () => {
     });
   });
 
-  it('should return 400 status for invalid task id', async () => {
+  it('should return 403 status for invalid task id', async () => {
     await expect(apiClient.get('/tasks/not-a-valid-uuid')).rejects.toMatchObject({
-      response: { status: 400 },
+      response: { status: 403 },
     });
   });
 

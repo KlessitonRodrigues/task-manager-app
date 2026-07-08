@@ -1,6 +1,5 @@
+import { createZodDto } from '@packages/common-resources/utils/zod';
 import { z } from 'zod';
-
-import { createZodDto } from '../../../utils/zod';
 
 export class SuccessDto extends createZodDto(
   z.object({
