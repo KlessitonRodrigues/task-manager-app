@@ -77,8 +77,6 @@ export const updateTaskService: APIGatewayHandler = async event => {
       Object.entries(dtoResult.data).filter(([, v]) => v !== undefined),
     );
 
-    console.log(updateData);
-
     const updateResult = await taskModel.model.update({ id: pkResult.data }, updateData);
     if (updateResult && 'statusCode' in updateResult) return updateResult;
 

@@ -58,9 +58,9 @@ describe('Tasks API', () => {
     });
   });
 
-  it('should return 403 status for invalid task id', async () => {
+  it('should return 400 status for invalid task id', async () => {
     await expect(apiClient.get('/tasks/not-a-valid-uuid')).rejects.toMatchObject({
-      response: { status: 403 },
+      response: { status: 400 },
     });
   });
 
@@ -83,7 +83,7 @@ describe('Tasks API', () => {
 
   it('should return 404 when updating a non-existent task', async () => {
     await expect(
-      apiClient.patch(`/tasks/${randomUUID()}`, { name: 'Ghost Task' }),
+      apiClient.put(`/tasks/${randomUUID()}`, { name: 'Ghost Task' }),
     ).rejects.toMatchObject({ response: { status: 404 } });
   });
 
