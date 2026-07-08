@@ -1,7 +1,7 @@
 import dotenv from './enviroment';
 
 export const resourceNames = {
-  taskTable: dotenv.STACK_NAME + '-task-table',
+  taskTable: dotenv.STACK_NAME + '-task-table-v3',
   taskApiGateway: dotenv.STACK_NAME + '-task-api-gateway',
   logGroup: dotenv.STACK_NAME + '-log-group',
   findAllTaskLambda: dotenv.STACK_NAME + '-find-all-task-lambda',

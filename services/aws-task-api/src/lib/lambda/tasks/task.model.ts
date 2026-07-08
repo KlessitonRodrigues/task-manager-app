@@ -5,7 +5,6 @@ import dotenv from '../../../constants/enviroment';
 
 const schema = new dynamoose.Schema({
   id: { type: String, required: true, default: () => crypto.randomUUID() },
-  type: { type: String, required: true, default: 'TASK' },
   name: { type: String, required: true },
   description: { type: String },
   status: { type: String, required: true, default: 'pending' },

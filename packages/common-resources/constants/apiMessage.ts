@@ -59,4 +59,12 @@ export const apiMessage = {
     code: "unauthorized",
     message: "Unauthorized",
   },
+  DATABASE_ERROR: {
+    code: "database_error",
+    message: "Database error",
+  },
+  VALIDATION_ERROR: {
+    code: "validation_error",
+    message: "Validation error",
+  },
 };

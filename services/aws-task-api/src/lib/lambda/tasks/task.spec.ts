@@ -71,7 +71,7 @@ describe('Tasks API', () => {
   });
 
   it('should update a task and return 200 status', async () => {
-    const updateDto: UpdateTaskDto = { name: `Updated Task ${testId}`, status: 'in_progress' };
+    const updateDto: UpdateTaskDto = { name: `Updated Task 123 ${testId}`, status: 'in_progress' };
     const response = await apiClient.put(`/tasks/${createdTaskId}`, updateDto);
     expect(response.status).toBe(200);
     expect(response.data).toMatchObject({

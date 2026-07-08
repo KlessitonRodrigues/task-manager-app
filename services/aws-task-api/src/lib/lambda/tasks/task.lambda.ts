@@ -5,15 +5,7 @@ import * as nodeLambda from 'aws-cdk-lib/aws-lambda-nodejs';
 import { resourceNames } from '../../../constants/resources';
 import { environment } from '../../../utils/lambda';
 
-const nodeModules = [
-  'zod',
-  'nestjs-zod',
-  '@nestjs/common',
-  'dynamoose',
-  '@nestjs/core',
-  'reflect-metadata',
-  'rxjs',
-];
+const nodeModules = ['dynamoose', 'zod'];
 
 const entry = __dirname + '/task.service.ts';
 const runtime = lambda.Runtime.NODEJS_22_X;

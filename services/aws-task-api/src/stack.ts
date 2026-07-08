@@ -45,11 +45,11 @@ export class NodeTemplateStack extends cdk.Stack {
     const taskRoute = taskApi.root.addResource('tasks');
     taskRoute.addMethod('POST', new gateway.LambdaIntegration(createTaskLambda));
     taskRoute.addMethod('GET', new gateway.LambdaIntegration(findAllTaskLambda));
-    taskRoute.addMethod('PUT', new gateway.LambdaIntegration(updateTaskLambda));
 
     // /tasks/{id}
     const taskIdRoute = taskRoute.addResource('{id}');
     taskIdRoute.addMethod('GET', new gateway.LambdaIntegration(findOneTaskLambda));
+    taskIdRoute.addMethod('PUT', new gateway.LambdaIntegration(updateTaskLambda));
     taskIdRoute.addMethod('DELETE', new gateway.LambdaIntegration(deleteTaskLambda));
 
     // Permissions
@@ -61,6 +61,7 @@ export class NodeTemplateStack extends cdk.Stack {
 
     // API Preflight
     addCorsPreflight(taskRoute);
+    addCorsPreflight(taskIdRoute);
   }
 }
 

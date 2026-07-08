@@ -1,9 +1,9 @@
-import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
+
+import { createZodDto } from '../../../utils/zod';
 
 export const taskSchema = {
   id: z.string().uuid(),
-  type: z.string().default('TASK'),
   name: z.string().min(1).max(200),
   description: z.string().optional(),
   status: z.string().default('pending'),
@@ -16,7 +16,6 @@ export const taskSchema = {
 export class GetTaskResponseDto extends createZodDto(
   z.object({
     id: taskSchema.id,
-    type: taskSchema.type,
     name: taskSchema.name,
     description: taskSchema.description,
     status: taskSchema.status,

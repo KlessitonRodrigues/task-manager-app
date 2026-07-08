@@ -16,6 +16,8 @@ const taskModel = new TaskModel();
 export const findAllTaskService: APIGatewayHandler = async () => {
   try {
     const tasks = await taskModel.model.scan().exec();
+    if (!Array.isArray(tasks)) return tasks;
+
     const parsed = z.array(GetTaskResponseDto.schema).safeParse(tasks);
     if (!parsed.success) return badRequest(parsed.error.flatten());
     return createResponse(200, parsed.data);
@@ -30,6 +32,7 @@ export const findOneTaskService: APIGatewayHandler = async event => {
     if (!pkResult.success) return badRequest(pkResult.error.flatten());
 
     const task = await taskModel.model.get({ id: pkResult.data });
+    if (task && 'statusCode' in task) return task;
     if (!task) return createResponse(404, ErrorDto.create({ ...apiMessage.NOT_FOUND }));
 
     const parsed = GetTaskResponseDto.schema.safeParse(task);
@@ -46,7 +49,8 @@ export const createTaskService: APIGatewayHandler = async event => {
     const dtoResult = CreateTaskDto.schema.safeParse(body);
     if (!dtoResult.success) return badRequest(dtoResult.error.flatten());
 
-    const task = await taskModel.model.create({ type: 'TASK', ...dtoResult.data });
+    const task = await taskModel.model.create({ ...dtoResult.data });
+    if ('statusCode' in task) return task;
 
     const parsed = GetTaskResponseDto.schema.safeParse(task);
     if (!parsed.success) return badRequest(parsed.error.flatten());
@@ -66,13 +70,20 @@ export const updateTaskService: APIGatewayHandler = async event => {
     if (!dtoResult.success) return badRequest(dtoResult.error.flatten());
 
     const task = await taskModel.model.get({ id: pkResult.data });
+    if (task && 'statusCode' in task) return task;
     if (!task) return createResponse(404, ErrorDto.create({ ...apiMessage.NOT_FOUND }));
 
     const updateData = Object.fromEntries(
       Object.entries(dtoResult.data).filter(([, v]) => v !== undefined),
     );
-    await taskModel.model.update({ id: pkResult.data }, updateData);
+
+    console.log(updateData);
+
+    const updateResult = await taskModel.model.update({ id: pkResult.data }, updateData);
+    if (updateResult && 'statusCode' in updateResult) return updateResult;
+
     const updated = await taskModel.model.get({ id: pkResult.data });
+    if (updated && 'statusCode' in updated) return updated;
 
     const parsed = GetTaskResponseDto.schema.safeParse(updated);
     if (!parsed.success) return badRequest(parsed.error.flatten());
@@ -88,6 +99,7 @@ export const deleteTaskService: APIGatewayHandler = async event => {
     if (!pkResult.success) return badRequest(pkResult.error.flatten());
 
     const task = await taskModel.model.get({ id: pkResult.data });
+    if (task && 'statusCode' in task) return task;
     if (!task) return createResponse(404, ErrorDto.create({ ...apiMessage.NOT_FOUND }));
 
     await taskModel.model.delete({ id: pkResult.data });
