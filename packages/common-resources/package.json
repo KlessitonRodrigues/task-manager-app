@@ -1,6 +1,7 @@
 {
   "name": "@packages/common-resources",
   "version": "1.0.0",
+  "private": true,
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "dev": "tsc -p tsconfig.json --watch",

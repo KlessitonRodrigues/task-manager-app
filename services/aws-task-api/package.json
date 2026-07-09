@@ -1,6 +1,7 @@
 {
   "name": "@services/aws-task-api",
   "version": "0.1.0",
+  "private": true,
   "scripts": {
     "dev": "nodemon src/api.ts",
     "cdk": "cdk",
@@ -33,6 +34,7 @@
     "@packages/common-resources": "./packages/common-resources",
     "aws-cdk-lib": "^2.238.0",
     "constructs": "^10.5.0",
+    "dynamoose": "^4.2.0",
     "zod": "^4.4.3"
   },
   "peerDependencies": {
