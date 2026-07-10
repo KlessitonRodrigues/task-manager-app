@@ -1,11 +1,13 @@
-import TranslationView from '@/lib/components/translations/TranslationView';
-import { Page, PageContent } from '@packages/daisy-ui-components';
+import {
+  Page,
+  PageContent,
+} from "@packages/daisy-ui-components/common/containers/Page.js";
 
 export default async function TemplatePage() {
   return (
     <Page className="mt-8">
       <PageContent>
-        <TranslationView />
+        <div>TEST</div>
       </PageContent>
     </Page>
   );

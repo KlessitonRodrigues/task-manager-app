@@ -1,12 +1,12 @@
-import { ReadSettings } from '@packages/daisy-ui-components';
-import '@packages/daisy-ui-components/global.css';
-import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
-import { PropsWithChildren } from 'react';
+import "@packages/daisy-ui-components/global.css";
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import { PropsWithChildren } from "react";
 
-import './theme.css';
+import "./theme.css";
+import { ReadSettings } from "@packages/daisy-ui-components";
 
-const inter = Inter({ weight: ['500'] });
+const inter = Inter({ weight: ["500"] });
 
 export const metadata: Metadata = {};
 
