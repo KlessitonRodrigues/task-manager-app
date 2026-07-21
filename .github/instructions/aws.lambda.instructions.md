@@ -1,3 +1,13 @@
+---
+description: AWS Lambda (CDK + DynamoDB) coding rules for TypeScript projects
+globs: apps/lambda/**/*.ts
+---
+
+> **Document format:** Each section targets a specific file type. Rules appear as `// comment`
+> lines above code blocks — follow them exactly unless there is clear justification to deviate.
+> Code examples use the `task` feature as reference; substitute your own feature name throughout.
+> All import paths are relative to the package root.
+
 # AWS Lambda (CDK + DynamoDB) Coding Rules
 
 ## Folder Structure
@@ -43,7 +53,7 @@ src/
 ```typescript
 import * as crypto from 'crypto';
 import * as dynamoose from 'dynamoose';
-import dotenv from '../../../constants/enviroment';
+import dotenv from 'constants/enviroment';
 
 const schema = new dynamoose.Schema({
   id: { type: String, required: true, default: () => crypto.randomUUID() },
@@ -71,7 +81,7 @@ export class TaskModel {
 // Use `.partial()` for update DTOs — never duplicate field definitions
 
 ```typescript
-import { createZodDto } from '@packages/common-resources/utils/zod';
+import { createZodDto } from 'utils/zod';
 import { z } from 'zod';
 
 export const taskSchema = {
@@ -114,11 +124,11 @@ export class UpdateTaskDto extends createZodDto(
 // Filter undefined fields before calling `model.update()` to avoid overwriting with null
 
 ```typescript
-import { APIGatewayHandler, badRequest, createResponse, internalError } from '../../../utils/lambda';
+import { APIGatewayHandler, badRequest, createResponse, internalError } from 'utils/lambda';
 import { ErrorDto, SuccessDto } from '../common/api.dto';
 import { CreateTaskDto, GetTaskResponseDto, UpdateTaskDto, taskSchema } from './task.dto';
 import { TaskModel } from './task.model';
-import { apiMessage } from '@packages/common-resources/constants/apiMessage';
+import { apiMessage } from 'constants/apiMessage';
 
 const taskModel = new TaskModel();
 
@@ -205,8 +215,8 @@ export const deleteTaskService: APIGatewayHandler = async event => {
 import * as cdk from 'aws-cdk-lib';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as nodeLambda from 'aws-cdk-lib/aws-lambda-nodejs';
-import { resourceNames } from '../../../constants/resources';
-import { environment } from '../../../utils/lambda';
+import { resourceNames } from 'constants/resources';
+import { environment } from 'utils/lambda';
 
 const nodeModules = ['dynamoose', 'zod'];
 const entry = __dirname + '/task.service.ts';
@@ -236,7 +246,7 @@ export class CreateTaskLambda extends nodeLambda.NodejsFunction {
 ```typescript
 import * as cdk from 'aws-cdk-lib';
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
-import { resourceNames } from '../../constants/resources';
+import { resourceNames } from 'constants/resources';
 
 export class TaskTable {
   public table: dynamodb.Table;
@@ -260,7 +270,7 @@ export class TaskTable {
 ```typescript
 import * as cdk from 'aws-cdk-lib';
 import * as gateway from 'aws-cdk-lib/aws-apigateway';
-import { resourceNames } from '../../constants/resources';
+import { resourceNames } from 'constants/resources';
 
 export class TaskAPIGateway extends gateway.RestApi {
   constructor(scope: cdk.Stack) {
@@ -339,14 +349,14 @@ export const resourceNames = {
 
 ## Tests (`<feature>.spec.ts`)
 
-// Must be integration tests using axios against a real running API — no mocking
-// Must throw early if `TEST_API_URL` env variable is not set
-// Must use `randomUUID()` to generate unique test data per run
-// Must follow full CRUD lifecycle in order: create → list → get → update → delete
-// Must persist the created resource `id` in a `let` variable shared across tests
-// Must include validation tests for invalid input (400) and missing resources (404)
-// Must always end with a cleanup test that deletes created data even if earlier tests fail
-// Must include all constants and setup inside the `describe()` block
+// Integration tests only — use axios against a real running API, no mocking
+// Throw early if `TEST_API_URL` env variable is not set
+// Use `randomUUID()` to generate unique test data per run
+// Follow the full CRUD lifecycle in order: create → list → get → update → delete
+// Persist the created resource `id` in a `let` variable shared across tests
+// Include validation tests for invalid input (400) and missing resources (404)
+// Always end with a cleanup test that deletes created data even if earlier tests fail
+// Include all constants and setup inside the `describe()` block
 
 ```typescript
 describe('Tasks API', () => {

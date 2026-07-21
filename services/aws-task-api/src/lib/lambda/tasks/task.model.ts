@@ -1,7 +1,7 @@
 import * as crypto from 'crypto';
 import * as dynamoose from 'dynamoose';
 
-import dotenv from '../../../constants/enviroment';
+import dotenv from '../../../constants/environment';
 
 const schema = new dynamoose.Schema({
   id: { type: String, required: true, default: () => crypto.randomUUID() },

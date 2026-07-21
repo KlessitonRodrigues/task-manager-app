@@ -3,9 +3,9 @@ import '../../../config/dotenv'; // sort-imports-ignore
 import axios from 'axios';
 import { randomUUID } from 'crypto';
 
-import dotenv from '../../../constants/enviroment';
+import dotenv from '../../../constants/environment';
 import { CreateTaskDto, UpdateTaskDto } from './task.dto';
-import { apiMessage } from '@packages/common-resources/constants/apiMessage';
+import { apiMessages } from '../../../constants/apiMessages';
 
 describe('Tasks API', () => {
   const baseURL = dotenv.TEST_API_URL;
@@ -90,7 +90,7 @@ describe('Tasks API', () => {
   it('should delete a task and return 200 status', async () => {
     const response = await apiClient.delete(`/tasks/${createdTaskId}`);
     expect(response.status).toBe(200);
-    expect(response.data).toEqual({ ...apiMessage.DELETED_SUCCESSFULLY });
+    expect(response.data).toEqual({ ...apiMessages.DELETED_SUCCESSFULLY });
   });
 
   it('should return 404 when deleting a non-existent task', async () => {

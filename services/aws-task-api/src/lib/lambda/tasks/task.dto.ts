@@ -1,5 +1,6 @@
-import { createZodDto } from '@packages/common-resources/utils/zod';
 import { z } from 'zod';
+
+import { createZodDto } from '../../../utils/zod';
 
 export const taskSchema = {
   id: z.string().uuid(),

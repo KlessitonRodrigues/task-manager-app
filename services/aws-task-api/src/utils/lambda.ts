@@ -1,5 +1,4 @@
-import { apiMessage } from '@packages/common-resources/constants/apiMessage';
-
+import { apiMessages } from '../constants/apiMessages';
 import { ErrorDto } from '../lib/lambda/common/api.dto';
 
 export type APIGatewayHandler = (event: any) => Promise<any>;
@@ -61,13 +60,13 @@ export const createResponseWithOrigin: CreateResponseWithCookiesOptions = (
 };
 
 export const badRequest = (details: unknown) => {
-  return createResponse(400, ErrorDto.create({ ...apiMessage.INVALID_REQUEST, details }));
+  return createResponse(400, ErrorDto.create({ ...apiMessages.INVALID_REQUEST, details }));
 };
 
 export const internalError = (err: any) => {
   console.error(err);
   return createResponse(
     500,
-    ErrorDto.create({ details: err.message, ...apiMessage.INTERNAL_SERVER_ERROR }),
+    ErrorDto.create({ details: err.message, ...apiMessages.INTERNAL_SERVER_ERROR }),
   );
 };

@@ -1,6 +1,6 @@
-import { apiMessage } from '@packages/common-resources/constants/apiMessage';
 import { z } from 'zod';
 
+import { apiMessages } from '../../../constants/apiMessages';
 import {
   APIGatewayHandler,
   badRequest,
@@ -33,7 +33,7 @@ export const findOneTaskService: APIGatewayHandler = async event => {
 
     const task = await taskModel.model.get({ id: pkResult.data });
     if (task && 'statusCode' in task) return task;
-    if (!task) return createResponse(404, ErrorDto.create({ ...apiMessage.NOT_FOUND }));
+    if (!task) return createResponse(404, ErrorDto.create({ ...apiMessages.NOT_FOUND }));
 
     const parsed = GetTaskResponseDto.schema.safeParse(task);
     if (!parsed.success) return badRequest(parsed.error.flatten());
@@ -71,7 +71,7 @@ export const updateTaskService: APIGatewayHandler = async event => {
 
     const task = await taskModel.model.get({ id: pkResult.data });
     if (task && 'statusCode' in task) return task;
-    if (!task) return createResponse(404, ErrorDto.create({ ...apiMessage.NOT_FOUND }));
+    if (!task) return createResponse(404, ErrorDto.create({ ...apiMessages.NOT_FOUND }));
 
     const updateData = Object.fromEntries(
       Object.entries(dtoResult.data).filter(([, v]) => v !== undefined),
@@ -98,10 +98,10 @@ export const deleteTaskService: APIGatewayHandler = async event => {
 
     const task = await taskModel.model.get({ id: pkResult.data });
     if (task && 'statusCode' in task) return task;
-    if (!task) return createResponse(404, ErrorDto.create({ ...apiMessage.NOT_FOUND }));
+    if (!task) return createResponse(404, ErrorDto.create({ ...apiMessages.NOT_FOUND }));
 
     await taskModel.model.delete({ id: pkResult.data });
-    return createResponse(200, SuccessDto.create({ ...apiMessage.DELETED_SUCCESSFULLY }));
+    return createResponse(200, SuccessDto.create({ ...apiMessages.DELETED_SUCCESSFULLY }));
   } catch (err: any) {
     return internalError(err);
   }

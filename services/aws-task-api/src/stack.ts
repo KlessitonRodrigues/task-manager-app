@@ -3,7 +3,7 @@ import './config/dotenv'; // sort-imports-ignore
 import * as cdk from 'aws-cdk-lib';
 import * as gateway from 'aws-cdk-lib/aws-apigateway';
 
-import dotenv from './constants/enviroment';
+import dotenv from './constants/environment';
 import { resourceNames } from './constants/resources';
 import { TaskTable } from './lib/dynamodb/task.table';
 import { TaskAPIGateway } from './lib/gateway/task.gateway';

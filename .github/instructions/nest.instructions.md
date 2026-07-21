@@ -1,3 +1,13 @@
+---
+description: NestJS coding rules for TypeScript projects
+globs: apps/api/**/*.ts
+---
+
+> **Document format:** Each section targets a specific file type. Rules appear as `// comment`
+> lines above code blocks — follow them exactly unless there is clear justification to deviate.
+> Code examples use the `user` feature as reference; substitute your own feature name throughout.
+> All import paths are relative to the package root.
+
 # NestJS Coding Rules
 
 ## Folder Structure
@@ -49,7 +59,7 @@ export class UserModule {}
 
 ## Services
 
-// Must always implement a typed interface — never skip the interface
+// Always implement a typed interface — never skip the interface
 
 ```typescript
 export class UserService implements IUserService {
@@ -60,9 +70,12 @@ export class UserService implements IUserService {
 }
 ```
 
-// Must always wrap database operations in try-catch returning ErrorDto on failure
+// Always wrap database operations in try-catch returning ErrorDto on failure
+// Always use union return types: PromisedDTO | ErrorDto
 
 ```typescript
+import { apiMessage } from 'constants/apiMessage';
+
 async findOne(id: number): Promise<GetUserResponseDto | ErrorDto> {
   try {
     const user = await this.userRepository.findOneBy({ id });
@@ -72,35 +85,25 @@ async findOne(id: number): Promise<GetUserResponseDto | ErrorDto> {
     return ErrorDto.create({ details, ...apiMessage.FIND_USER_ERROR });
   }
 }
-```
 
-// Must always use union return types: PromisedDTO | ErrorDto
-
-```typescript
 async create(dto: CreateUserDto): Promise<GetUserResponseDto | ErrorDto>
 ```
 
 ## Controllers
 
-// Must use private readonly for injected services in constructor
+// Use private readonly for injected services in constructor
+// Apply @UsePipes(ZodValidationPipe) on routes that receive a @Body()
+// Return service results directly — no extra wrapping in controllers
 
 ```typescript
 constructor(private readonly userService: UserService) {}
-```
 
-// Must apply @UsePipes(ZodValidationPipe) on routes that receive a @Body()
-
-```typescript
 @Post()
 @UsePipes(ZodValidationPipe)
 async create(@Body() dto: CreateUserDto) {
   return this.userService.create(dto);
 }
-```
 
-// Must return service results directly — no extra wrapping in controllers
-
-```typescript
 @Get(':id')
 async findOne(@Param('id') id: string) {
   return this.userService.findOne(+id);
@@ -109,11 +112,16 @@ async findOne(@Param('id') id: string) {
 
 ## DTOs
 
-// Must use nestjs-zod — define a shared schema object and derive DTOs from it
-// Must use createZodDto() to derive DTOs from zod schemas
-// Must to use DTOs for request and response shapes, never use entities directly in controllers
+// Use nestjs-zod — define a shared schema object and derive DTOs from it
+// Use createZodDto() to derive DTOs from zod schemas
+// Use DTOs for request and response shapes — never use entities directly in controllers
+// Use `.partial()` for update DTOs — never duplicate field definitions
+// Use static `.create()` factory method for instantiating response DTOs
 
 ```typescript
+import { createZodDto } from 'utils/zod';
+import { z } from 'zod';
+
 const userSchema = {
   name: z.string().min(3).max(100),
   email: z.string().email(),
@@ -126,16 +134,14 @@ export class PatchUserDto extends createZodDto(
 ) {}
 ```
 
-// Must use static .create() factory method for instantiating response DTOs
-
 ```typescript
 return GetUserResponseDto.create(user);
 ```
 
 ## Entities
 
-// Must declare table name explicitly in @Entity()
-// Must use @CreateDateColumn() and @UpdateDateColumn() for timestamps — never manage them manually
+// Declare table name explicitly in @Entity()
+// Use @CreateDateColumn() and @UpdateDateColumn() for timestamps — never manage them manually
 
 ```typescript
 @Entity("users")
@@ -156,74 +162,70 @@ export class UserEntity {
 
 ## Tests
 
-// Must be integration tests using axios against a real running API — no mocking
-// Must throw early if BASE_URL env variable is not configured
-// Must to certify that data created in tests will be deleted in the cleanup test, even if a test fails
-// Must to include all code and constants inside the test "describe()" block
-// Must to create instances of DTOs from feature.dto.ts to mock data
+// Integration tests only — use axios against a real running API, no mocking
+// Throw early if `BASE_URL` env variable is not configured
+// Always clean up data created in tests, even if earlier tests fail
+// Include all code and constants inside the `describe()` block
+// Create DTO instances from feature.dto.ts to mock data
+// Use randomUUID() to generate unique test data, preventing collisions between runs
+// Follow the full CRUD lifecycle in order: create → list → get → update → delete
+// Persist the created resource ID in a `let` variable shared across tests
+// Verify response shapes using toMatchObject (partial match) and toEqual (exact match)
+// Include a validation test that sends invalid data and expects a 400 response
+// Always include a cleanup test as the final case to remove any leftover test data
 
 ```typescript
-const baseURL = dotenv.BASE_URL;
-if (!baseURL) throw new Error("missing BASE_URL");
-const apiClient = axios.create({ baseURL });
-```
+import { apiMessage } from 'constants/apiMessage';
 
-// Must use randomUUID() to generate unique test data, preventing collisions between runs
+describe('Users API', () => {
+  const baseURL = dotenv.BASE_URL;
+  if (!baseURL) throw new Error("missing BASE_URL");
+  const apiClient = axios.create({ baseURL });
 
-```typescript
-const testId = randomUUID().replace(/-/g, "");
-const createUserDto: CreateUserDto = {
-  name: `John Doe ${testId}`,
-  email: `john${testId}@email.com`,
-  password: "password123",
-};
-```
+  const testId = randomUUID().replace(/-/g, "");
+  const createUserDto: CreateUserDto = {
+    name: `John Doe ${testId}`,
+    email: `john${testId}@email.com`,
+    password: "password123",
+  };
 
-// Must follow the full CRUD lifecycle in order: create → list → get → update → delete
-// Must persist the created resource ID in a `let` variable shared across tests
+  let createdUserId: number;
 
-```typescript
-let createdUserId: number;
-
-it("should create a new user and return 201 status", async () => {
-  const response = await apiClient.post("/users", createUserDto);
-  expect(response.status).toBe(201);
-  createdUserId = response.data.id;
-});
-```
-
-// Must verify response shapes using toMatchObject (partial match) and toEqual (exact match)
-
-```typescript
-expect(response.data).toMatchObject({
-  id: createdUserId,
-  name: createUserDto.name,
-});
-expect(response.data).toEqual({ ...apiMessage.DELETED_SUCCESSFULLY });
-```
-
-// Must include a validation test that sends invalid data and expects a 400 response
-
-```typescript
-it("should return 400 status for invalid user data", async () => {
-  await expect(apiClient.post("/users", invalidDto)).rejects.toMatchObject({
-    response: { status: 400 },
+  it("should create a new user and return 201 status", async () => {
+    const response = await apiClient.post("/users", createUserDto);
+    expect(response.status).toBe(201);
+    createdUserId = response.data.id;
   });
-});
-```
 
-// Must always include a cleanup test as the final case to remove any leftover test data
+  it("should return the created user", async () => {
+    const response = await apiClient.get(`/users/${createdUserId}`);
+    expect(response.data).toMatchObject({
+      id: createdUserId,
+      name: createUserDto.name,
+    });
+  });
 
-```typescript
-it("should clean up any test data", async () => {
-  if (!createdUserId) return;
-  await apiClient.delete(`/users/${createdUserId}`).catch(() => undefined);
+  it("should delete a user and return success message", async () => {
+    const response = await apiClient.delete(`/users/${createdUserId}`);
+    expect(response.data).toEqual({ ...apiMessage.DELETED_SUCCESSFULLY });
+  });
+
+  it("should return 400 status for invalid user data", async () => {
+    await expect(apiClient.post("/users", { name: "" })).rejects.toMatchObject({
+      response: { status: 400 },
+    });
+  });
+
+  it("should clean up any test data", async () => {
+    if (!createdUserId) return;
+    await apiClient.delete(`/users/${createdUserId}`).catch(() => undefined);
+  });
 });
 ```
 
 ## Swagger 2.0 Synchronization
 
-// Must always update <repository>/swagger-2.0.yaml when changing any Nest API surface
+// Always update <repository>/swagger-2.0.yaml when changing any Nest API surface
 // Keep swagger-2.0.yaml in sync for every change in:
 // - modules (<feature>.module.ts) that expose/add/remove controllers
 // - controllers (routes, params, request/response shapes, status codes)
