@@ -1,4 +1,4 @@
-export const formErrors = {
+export const formMessages = {
   en: {
     REQUIRED: "Required field",
     INVALID_EMAIL: "Invalid email address",
