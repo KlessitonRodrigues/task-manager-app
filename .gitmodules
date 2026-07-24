@@ -1,3 +1,6 @@
 [submodule "packages/daisy-ui-components"]
 	path = packages/daisy-ui-components
 	url = git@github.com:KlessitonRodrigues/daisy-ui-components.git
+[submodule "packages/ai-instruction-files"]
+	path = packages/ai-instruction-files
+	url = git@github.com:KlessitonRodrigues/ai-instruction-files.git
